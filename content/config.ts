@@ -11,7 +11,7 @@ export const flags: FlagMap = {
 
 export const site = {
   name: "Wikitongues AI",
-  url: "https://wikitongues-web-ai.vercel.app",
+  url: "https://wikitongues-ai-web.vercel.app",
   parentUrl: "https://wikitongues.org",
   parentName: "Wikitongues",
   // Wikitongues' existing donation flow. Note asks donors to direct the gift to the AI initiative.

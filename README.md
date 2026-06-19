@@ -32,15 +32,15 @@ npm run verify       # typecheck + unit tests + static build + post-build smoke 
 
 All project facts live as typed data under `content/en/`. Edit one file and the rendered section updates:
 
-| File | What it controls |
-|---|---|
-| `content/en/timeline.ts` | The milestone timeline |
-| `content/en/buckets.ts` | The eight evaluation dimensions |
-| `content/en/research.ts` | Annotated research entries, grouped by theme |
-| `content/en/faq.ts` | FAQ items + per-answer sign-off status |
+| File                        | What it controls                                       |
+| --------------------------- | ------------------------------------------------------ |
+| `content/en/timeline.ts`    | The milestone timeline                                 |
+| `content/en/buckets.ts`     | The eight evaluation dimensions                        |
+| `content/en/research.ts`    | Annotated research entries, grouped by theme           |
+| `content/en/faq.ts`         | FAQ items + per-answer sign-off status                 |
 | `content/en/leaderboard.ts` | Leaderboard snapshot (illustrative until real results) |
-| `content/en/site.ts` | Hero copy, nav labels, section titles, footer |
-| `content/config.ts` | Feature flags, donate URL, site URL, draft-FAQ toggle |
+| `content/en/site.ts`        | Hero copy, nav labels, section titles, footer          |
+| `content/config.ts`         | Feature flags, donate URL, site URL, draft-FAQ toggle  |
 
 ### FAQ sign-off
 
