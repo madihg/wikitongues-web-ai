@@ -13,7 +13,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-full max-w-container-bleed items-center justify-between px-5 sm:px-6">
         <a
-          href="#overview"
+          href="/#overview"
           className="flex items-baseline gap-2 font-serif text-lg font-semibold"
         >
           {site.parentName}

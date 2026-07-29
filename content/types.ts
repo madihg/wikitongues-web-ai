@@ -75,3 +75,36 @@ export type FeatureFlag =
   | "researchRoute"
   | "faqRoute";
 export type FlagMap = Record<FeatureFlag, boolean>;
+
+// --- Public stats (live, from the annotation app's aggregate-only API) -------
+// Mirror of GET /api/public/stats. Aggregate counts and rates only - never any
+// names, emails, or raw Igala answers.
+export interface PublicStats {
+  generatedAt: string;
+  languages: string[];
+  prompts: {
+    total: number;
+    heldOutBenchmark: number;
+    byCategory: Array<{ key: string; label: string; count: number }>;
+  };
+  gold: {
+    coldAuthoredAnswers: number;
+    corrections: number;
+    total: number;
+  };
+  judgments: {
+    pairwiseTotal: number;
+    bothInadequate: number;
+    bothInadequateRate: number; // 0..1
+    decidedWinner: number;
+  };
+  annotators: { active: number };
+  modelOutputPurity: {
+    metric: string;
+    before: number;
+    after: number;
+    unit: string;
+    intervention: string;
+    measuredOn: string;
+  };
+}

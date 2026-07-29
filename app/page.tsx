@@ -6,6 +6,7 @@ import { TimelineList } from "@/components/sections/TimelineList";
 import { ResearchList } from "@/components/sections/ResearchList";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { Support } from "@/components/sections/Support";
+import { CTAButton } from "@/components/primitives/CTAButton";
 
 export default function HomePage() {
   const { ui } = getContent();
@@ -31,6 +32,11 @@ export default function HomePage() {
         intro={ui.research.intro}
         width="wide"
       >
+        <div className="mb-10">
+          <CTAButton href="/research/" variant="secondary">
+            Read the full research story
+          </CTAButton>
+        </div>
         <ResearchList />
       </Section>
 

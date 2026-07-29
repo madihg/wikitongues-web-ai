@@ -52,6 +52,50 @@ if (html.length < 5000) {
   process.exit(1);
 }
 
+// The dedicated Research page must also have exported to a static file with its
+// key content (hero, diagram labels, findings, next steps) rendered in.
+const researchFile = "out/research/index.html";
+if (!existsSync(researchFile)) {
+  console.error(
+    `[smoke] FAIL: ${researchFile} not found. Did the /research route export?`,
+  );
+  process.exit(1);
+}
+const researchHtml = readFileSync(researchFile, "utf8");
+const researchRequired = [
+  // hero + why
+  "The whole project, explained",
+  "Frontier AI fails the world",
+  // who (institutions, never individual annotators)
+  "Igala Wikimedians",
+  "New York University",
+  // how - the three diagrams' headings + labels
+  "Inside one annotation episode",
+  "Write your own answer",
+  "The data flywheel",
+  "The method ladder",
+  "The frozen exam",
+  // findings + next
+  "Early findings from the pilot",
+  "A public launch in Ghana",
+];
+const researchMissing = researchRequired.filter((n) => !researchHtml.includes(n));
+if (researchMissing.length > 0) {
+  console.error("[smoke] FAIL: expected content missing from out/research/index.html:");
+  for (const m of researchMissing) console.error(`  - ${JSON.stringify(m)}`);
+  process.exit(1);
+}
+
+// Aggregate-only guarantee: the statically built page must never inline any
+// per-person data fields (it only ever fetches aggregate counts at runtime).
+for (const forbidden of ["annotatorId", "passwordHash"]) {
+  if (researchHtml.includes(forbidden)) {
+    console.error(`[smoke] FAIL: research page unexpectedly contains ${JSON.stringify(forbidden)}`);
+    process.exit(1);
+  }
+}
+
 console.log(
-  `[smoke] OK: ${required.length} content checks passed (${html.length} bytes).`,
+  `[smoke] OK: ${required.length} home + ${researchRequired.length} research content checks passed ` +
+    `(home ${html.length} bytes, research ${researchHtml.length} bytes).`,
 );

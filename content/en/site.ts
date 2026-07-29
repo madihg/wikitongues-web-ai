@@ -1,12 +1,14 @@
 // UI strings and section copy. Kept out of JSX so the site is translatable later.
 export const ui = {
+  // Hrefs are root-relative (e.g. "/#project") so the nav works from any page,
+  // not just the home page. "Research" points at the dedicated /research page.
   nav: [
-    { label: "Overview", href: "#overview" },
-    { label: "The project", href: "#project" },
-    { label: "Timeline", href: "#timeline" },
-    { label: "Research", href: "#research" },
-    { label: "FAQ", href: "#faq" },
-    { label: "Support", href: "#support" },
+    { label: "Overview", href: "/#overview" },
+    { label: "The project", href: "/#project" },
+    { label: "Timeline", href: "/#timeline" },
+    { label: "Research", href: "/research/" },
+    { label: "FAQ", href: "/#faq" },
+    { label: "Support", href: "/#support" },
   ],
   skipToContent: "Skip to main content",
   backToParent: "wikitongues.org",
@@ -87,11 +89,11 @@ export const ui = {
       {
         title: "Wikitongues AI",
         links: [
-          { label: "Overview", href: "#overview" },
-          { label: "The project", href: "#project" },
-          { label: "Timeline", href: "#timeline" },
-          { label: "Research", href: "#research" },
-          { label: "FAQ", href: "#faq" },
+          { label: "Overview", href: "/#overview" },
+          { label: "The project", href: "/#project" },
+          { label: "Timeline", href: "/#timeline" },
+          { label: "Research", href: "/research/" },
+          { label: "FAQ", href: "/#faq" },
         ],
       },
       {
