@@ -50,7 +50,14 @@ export function MethodLadder({
         </defs>
 
         {/* ground */}
-        <line x1="8" y1="281" x2="348" y2="281" stroke={LINE} strokeWidth="1.5" />
+        <line
+          x1="8"
+          y1="281"
+          x2="348"
+          y2="281"
+          stroke={LINE}
+          strokeWidth="1.5"
+        />
 
         {/* rungs */}
         {RUNGS.map((r, i) => (

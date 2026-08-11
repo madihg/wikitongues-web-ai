@@ -50,7 +50,9 @@ export function StatsGrid() {
 
   const tiles: Tile[] = [
     {
-      value: live ? pct(live.judgments.bothInadequateRate) : pct(fb.bothInadequateRate),
+      value: live
+        ? pct(live.judgments.bothInadequateRate)
+        : pct(fb.bothInadequateRate),
       label: "of AI answers rejected by native speakers",
     },
     {
@@ -93,7 +95,14 @@ export function StatsGrid() {
           <span className="font-serif text-2xl font-semibold text-muted line-through decoration-line-strong">
             {purityBefore}%
           </span>
-          <svg width="28" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="text-accent">
+          <svg
+            width="28"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+            className="text-accent"
+          >
             <path
               d="M5 12h14M13 6l6 6-6 6"
               stroke="currentColor"
@@ -120,18 +129,25 @@ export function StatsGrid() {
           </p>
           <ul className="grid gap-2.5">
             {categories.map((c) => (
-              <li key={c.key} className="grid grid-cols-[1fr_auto] items-center gap-3">
+              <li
+                key={c.key}
+                className="grid grid-cols-[1fr_auto] items-center gap-3"
+              >
                 <div className="grid grid-cols-[minmax(0,11rem)_1fr] items-center gap-3">
                   <span className="truncate text-sm text-ink" title={c.label}>
                     {c.label}
                   </span>
                   <span
                     className="h-2.5 rounded-full bg-accent"
-                    style={{ width: `${Math.max(6, (c.count / maxCat) * 100)}%` }}
+                    style={{
+                      width: `${Math.max(6, (c.count / maxCat) * 100)}%`,
+                    }}
                     aria-hidden="true"
                   />
                 </div>
-                <span className="text-sm tabular-nums text-muted">{c.count}</span>
+                <span className="text-sm tabular-nums text-muted">
+                  {c.count}
+                </span>
               </li>
             ))}
           </ul>

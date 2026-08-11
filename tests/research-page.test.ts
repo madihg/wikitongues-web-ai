@@ -19,9 +19,9 @@ describe("research page content", () => {
     for (const r of researchPage.how.ladder.rungs) {
       expect(r.name.trim().length).toBeGreaterThan(0);
     }
-    expect(researchPage.how.ladder.heldOut.detail.trim().length).toBeGreaterThan(
-      0,
-    );
+    expect(
+      researchPage.how.ladder.heldOut.detail.trim().length,
+    ).toBeGreaterThan(0);
   });
 
   it("titles the page 'Research' and gives it three findings and three next steps", () => {

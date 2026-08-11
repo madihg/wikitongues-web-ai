@@ -12,8 +12,23 @@ Two tracks the site explains: (1) an Igala tutor, (2) the first public benchmark
 
 - Next.js App Router, static export (`output: 'export'`), Tailwind, TypeScript.
 - Repo: https://github.com/madihg/wikitongues-web-ai
-- Vercel: connected to that repo, deploys the static export.
+- Vercel project: **`wikitongues-ai-site`** -> https://wikitongues-ai-site.vercel.app
+- Git-connected: pushes to `main` auto-deploy.
 - Content is data: everything editable under `content/en/*` and `content/config.ts`.
+
+## READ THIS: the two URLs (do not confuse them)
+
+Three near-identical names caused a real mix-up on 2026-08-11. The mapping:
+
+| URL                              | What it serves                                                                                              | Vercel project        |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------- |
+| `wikitongues-ai-site.vercel.app` | **THIS marketing site**                                                                                     | `wikitongues-ai-site` |
+| `wikitongues-ai-web.vercel.app`  | **The ANNOTATOR PLATFORM** (`/login`, `/annotator`, `/learner`) - annotators depend on this, never touch it | `wikitongues-ai`      |
+| `web-three-rho-89.vercel.app`    | Platform's stable alias; the site's stats API reads from it                                                 | `wikitongues-ai`      |
+
+How to tell them apart in one command: the marketing site 404s `/login`; the platform returns 200.
+
+History: the first Vercel project was named after the local folder (`wikitongues-ai-web`), one letter-swap from the repo (`wikitongues-web-ai`) and confusingly close to the platform (`wikitongues-ai`). It was later renamed, which freed `wikitongues-ai-web.vercel.app` for the platform to take. Resolved by creating the distinctly-named `wikitongues-ai-site` project. The old `wikitongues-web-ai` project still exists and still serves an older build - safe to delete via the Vercel dashboard.
 
 ## Key decisions (made 2026-06-18)
 

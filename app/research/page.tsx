@@ -65,7 +65,10 @@ export default function ResearchPage() {
             </div>
           </div>
           <div className="lg:pt-2">
-            <HeadlineStat label={rp.why.statLabel} caption={rp.why.statCaption} />
+            <HeadlineStat
+              label={rp.why.statLabel}
+              caption={rp.why.statCaption}
+            />
           </div>
         </div>
       </Section>

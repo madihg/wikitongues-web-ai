@@ -27,7 +27,10 @@ export const statsApi = {
 
 export const site = {
   name: "Wikitongues AI",
-  url: "https://wikitongues-ai-web.vercel.app",
+  // The marketing site's own canonical domain. Deliberately NOT
+  // `wikitongues-ai-web.vercel.app` - that alias serves the annotation app
+  // (login / annotator / learner routes). Keep these two straight.
+  url: "https://wikitongues-ai-site.vercel.app",
   parentUrl: "https://wikitongues.org",
   parentName: "Wikitongues",
   // Wikitongues' existing donation flow. Note asks donors to direct the gift to the AI initiative.

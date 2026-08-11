@@ -79,9 +79,13 @@ const researchRequired = [
   "Early findings from the pilot",
   "A public launch in Ghana",
 ];
-const researchMissing = researchRequired.filter((n) => !researchHtml.includes(n));
+const researchMissing = researchRequired.filter(
+  (n) => !researchHtml.includes(n),
+);
 if (researchMissing.length > 0) {
-  console.error("[smoke] FAIL: expected content missing from out/research/index.html:");
+  console.error(
+    "[smoke] FAIL: expected content missing from out/research/index.html:",
+  );
   for (const m of researchMissing) console.error(`  - ${JSON.stringify(m)}`);
   process.exit(1);
 }
@@ -90,7 +94,9 @@ if (researchMissing.length > 0) {
 // per-person data fields (it only ever fetches aggregate counts at runtime).
 for (const forbidden of ["annotatorId", "passwordHash"]) {
   if (researchHtml.includes(forbidden)) {
-    console.error(`[smoke] FAIL: research page unexpectedly contains ${JSON.stringify(forbidden)}`);
+    console.error(
+      `[smoke] FAIL: research page unexpectedly contains ${JSON.stringify(forbidden)}`,
+    );
     process.exit(1);
   }
 }
