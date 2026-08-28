@@ -37,6 +37,9 @@ const required = [
   "wikitongues.org",
 ];
 
+// nav (rendered on every page) must carry the dedicated pages
+required.push("How it works");
+
 const missing = required.filter((needle) => !html.includes(needle));
 
 if (missing.length > 0) {
@@ -101,7 +104,64 @@ for (const forbidden of ["annotatorId", "passwordHash"]) {
   }
 }
 
+// The How-it-works page: static story + verbatim prompts must be in the
+// export; live numbers are fetched client-side so no score may appear here.
+const hiwFile = "out/how-it-works/index.html";
+if (!existsSync(hiwFile)) {
+  console.error(
+    `[smoke] FAIL: ${hiwFile} not found. Did the /how-it-works route export?`,
+  );
+  process.exit(1);
+}
+const hiwHtml = readFileSync(hiwFile, "utf8");
+const hiwRequired = [
+  // hero + system diagram
+  "How it works",
+  "The whole system",
+  "The Igala community",
+  "Assembled context",
+  "leak guard",
+  // journey
+  "v0 - plain models",
+  "v3 - a grammar",
+  // assembly
+  "THE METHOD (system prompt)",
+  "passes the leak guard",
+  // the verbatim prompts + their provenance labels
+  "You are a fluent native speaker of Igala",
+  "CLOSED-CLASS GRAMMAR",
+  "Answer in Igala only. Give the answer itself, nothing else.",
+  "generation-prompt-v2.ts",
+  "generation-prompt-v3.ts",
+  "d1cec50cb417",
+  // benchmark story (prose ships static; scores are live-only)
+  "Community Agreement Score",
+  "Why 100 is native agreement, not perfection.",
+  "Why it is measured on the leak-free subset.",
+  // open questions + the dated record
+  "The me- numeral question.",
+  "What changed, when",
+  "Aug 17, 2026",
+];
+const hiwMissing = hiwRequired.filter((n) => !hiwHtml.includes(n));
+if (hiwMissing.length > 0) {
+  console.error(
+    "[smoke] FAIL: expected content missing from out/how-it-works/index.html:",
+  );
+  for (const m of hiwMissing) console.error(`  - ${JSON.stringify(m)}`);
+  process.exit(1);
+}
+// Aggregate-only guarantee, same as the research page.
+for (const forbidden of ["annotatorId", "passwordHash", "@test.com"]) {
+  if (hiwHtml.includes(forbidden)) {
+    console.error(
+      `[smoke] FAIL: how-it-works page unexpectedly contains ${JSON.stringify(forbidden)}`,
+    );
+    process.exit(1);
+  }
+}
+
 console.log(
-  `[smoke] OK: ${required.length} home + ${researchRequired.length} research content checks passed ` +
-    `(home ${html.length} bytes, research ${researchHtml.length} bytes).`,
+  `[smoke] OK: ${required.length} home + ${researchRequired.length} research + ${hiwRequired.length} how-it-works content checks passed ` +
+    `(home ${html.length} bytes, research ${researchHtml.length} bytes, how-it-works ${hiwHtml.length} bytes).`,
 );

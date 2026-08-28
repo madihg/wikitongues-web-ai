@@ -14,6 +14,7 @@ const config: Config = {
         "surface-sunken": "var(--color-surface-sunken)",
         ink: "var(--color-text-primary)",
         muted: "var(--color-text-muted)",
+        danger: "var(--color-danger)",
         line: "var(--color-border)",
         "line-strong": "var(--color-border-strong)",
         accent: {

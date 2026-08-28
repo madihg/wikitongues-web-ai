@@ -5,3 +5,4 @@ export { research } from "./research";
 export { faq } from "./faq";
 export { leaderboard } from "./leaderboard";
 export { researchPage } from "./researchPage";
+export { howItWorks } from "./howItWorks";

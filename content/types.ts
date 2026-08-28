@@ -73,6 +73,65 @@ export type FeatureFlag =
   "leaderboard" | "emailCapture" | "researchRoute" | "faqRoute";
 export type FlagMap = Record<FeatureFlag, boolean>;
 
+// --- Public method metrics (live, aggregate-only) ---------------------------
+// Mirror of GET /api/public/method-metrics in the annotation app: the numbers
+// behind the How-it-works page. Counts, scores and rates only - never any
+// names, emails, prompt text, or raw Igala answers. The page treats every
+// field as untrusted at runtime (see components/how-it-works/useMethodMetrics)
+// and falls back to "live numbers unavailable" rather than rendering stale or
+// malformed data as current.
+
+export interface MethodCeiling {
+  chrfAll: number | null;
+  chrfClean: number | null;
+  nPromptsAll: number;
+  nPromptsClean: number;
+}
+
+export interface MethodCandidate {
+  name: string;
+  approach: string;
+  n: number;
+  nClean: number;
+  strippedChrfAll: number | null;
+  strippedChrfClean: number | null;
+  agreementScore: number | null;
+  agreementCiLow: number | null;
+  agreementCiHigh: number | null;
+  agreementUnderpowered: boolean;
+}
+
+export interface PublicMethodMetrics {
+  computedAt: string;
+  corpus: {
+    goldAnswers: number;
+    pairwiseComparisons: number;
+    pairwiseBothInadequate: number;
+    parallelPairs: number;
+    lexEntries: number;
+    annotators: number;
+  };
+  benchmark: {
+    frozenPrompts: number;
+    promptsWithGold: number;
+    leakedPrompts: number;
+    leakFreePrompts: number;
+  };
+  ceilings: {
+    asShipped: MethodCeiling;
+    onePerAnnotator: MethodCeiling;
+  };
+  agreementCeilingChrf: number | null;
+  poolPreference: {
+    poolComparisons: number;
+    poolBothInadequate: number;
+    poolDecided: number;
+    poolBothInadequateRate: number; // 0..1
+  };
+  /** Sorted by leak-free score, best first. */
+  candidates: MethodCandidate[];
+}
+
 // --- Public stats (live, from the annotation app's aggregate-only API) -------
 // Mirror of GET /api/public/stats. Aggregate counts and rates only - never any
 // names, emails, or raw Igala answers.

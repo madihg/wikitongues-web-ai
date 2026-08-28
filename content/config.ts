@@ -25,6 +25,18 @@ export const statsApi = {
     "https://web-three-rho-89.vercel.app/api/public/stats",
 };
 
+// The aggregate-only method-metrics endpoint that powers the How-it-works
+// page's live numbers (stat strip, diagram counts, Community Agreement Score
+// board). Same hosting story as statsApi: it lives in the annotation app and
+// is fetched cross-origin at runtime. The page NEVER falls back to recorded
+// score values - if this endpoint is unreachable it says "live numbers
+// unavailable" instead, so a stale benchmark can never masquerade as current.
+export const methodMetricsApi = {
+  url:
+    process.env.NEXT_PUBLIC_METHOD_METRICS_API_URL ||
+    "https://web-three-rho-89.vercel.app/api/public/method-metrics",
+};
+
 export const site = {
   name: "Wikitongues AI",
   // The marketing site's own canonical domain. Deliberately NOT
