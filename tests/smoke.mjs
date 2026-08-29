@@ -142,6 +142,11 @@ const hiwRequired = [
   "The me- numeral question.",
   "What changed, when",
   "Aug 17, 2026",
+  // the Aug 29 entry states documented facts only: GRN's signed agreement,
+  // everything else outreach in progress (see how-it-works-page.test.ts)
+  "Aug 29, 2026",
+  "Global Recordings Network signed a copyright agreement (Aug 27)",
+  "Outreach to other rights holders",
 ];
 const hiwMissing = hiwRequired.filter((n) => !hiwHtml.includes(n));
 if (hiwMissing.length > 0) {

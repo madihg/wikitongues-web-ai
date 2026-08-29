@@ -70,7 +70,11 @@ export interface LeaderboardSnapshot {
 
 // --- Feature flags ----------------------------------------------------------
 export type FeatureFlag =
-  "leaderboard" | "emailCapture" | "researchRoute" | "faqRoute";
+  | "leaderboard"
+  | "emailCapture"
+  | "researchRoute"
+  | "howItWorksRoute"
+  | "faqRoute";
 export type FlagMap = Record<FeatureFlag, boolean>;
 
 // --- Public method metrics (live, aggregate-only) ---------------------------

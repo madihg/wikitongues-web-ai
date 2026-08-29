@@ -6,6 +6,7 @@ export const flags: FlagMap = {
   leaderboard: true, // illustrative snapshot shown, clearly labelled as a sample
   emailCapture: false, // off for v1 (privacy default; no server route under static export)
   researchRoute: true, // dedicated /research page with diagrams + live stats
+  howItWorksRoute: true, // dedicated /how-it-works page: the method with live numbers
   faqRoute: false,
 };
 

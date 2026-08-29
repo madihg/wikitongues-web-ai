@@ -10,6 +10,7 @@ import {
 } from "@/content/en/igalaPrompts";
 import { ui } from "@/content/en/site";
 import { methodMetricsApi } from "@/content/config";
+import { isEnabled } from "@/lib/flags";
 import {
   fill,
   fmtChrf,
@@ -100,6 +101,39 @@ describe("how-it-works page content", () => {
     const serialized = JSON.stringify(howItWorks);
     expect(serialized).not.toContain("—"); // em dash
     expect(serialized).not.toContain("–"); // en dash
+  });
+
+  it("keeps the changelog byte-identical to the app's CHANGELOG constant", () => {
+    // The record is shared history with the annotation app's how-it-works
+    // page (web/src/app/how-it-works/page.tsx, const CHANGELOG). This hash
+    // was computed from that constant at copy time. If it breaks, re-copy the
+    // entries verbatim from the app - never paraphrase them here, and never
+    // add a claim (especially about permissions) beyond the app's exact text.
+    const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
+    expect(sha256(JSON.stringify(pairs))).toBe(
+      "5a1b479e9ff37f9f203269a2991e0e2303f0158c7f37e390ae381aa1d44c2250",
+    );
+  });
+
+  it("states only documented facts about source permissions (Aug 29)", () => {
+    const aug29 = howItWorks.changelog.entries.find(
+      (e) => e.date === "Aug 29, 2026",
+    );
+    expect(aug29).toBeDefined();
+    // The one permission actually on file: GRN's signed agreement.
+    expect(aug29?.text).toContain(
+      "Global Recordings Network signed a copyright agreement (Aug 27)",
+    );
+    // Everything else is outreach in progress, never a granted permission.
+    expect(aug29?.text).toContain("Outreach to other rights holders");
+    expect(aug29?.text).toContain(
+      "none of their text enters the corpus before written permission is on file",
+    );
+    expect(aug29?.text).not.toContain("Permission arrived");
+  });
+
+  it("ships behind an enabled feature flag, like the research route", () => {
+    expect(isEnabled("howItWorksRoute")).toBe(true);
   });
 
   it("wires the nav and footer to the dedicated /how-it-works page", () => {

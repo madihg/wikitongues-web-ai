@@ -385,6 +385,11 @@ export const howItWorks = {
     title: "What changed, when",
     intro:
       "The dates are fixed history - what each day added and what it corrected. Every live number they produced is recomputed above, not repeated here.",
+    // VERBATIM from the annotation app's CHANGELOG constant
+    // (web/src/app/how-it-works/page.tsx). The record is shared history; the
+    // two pages must tell it in the same words. When the app's changelog gains
+    // or corrects an entry, copy the exact text here - never paraphrase, never
+    // add a claim (especially about permissions) beyond what the app states.
     entries: [
       {
         date: "Aug 9, 2026",
@@ -396,11 +401,11 @@ export const howItWorks = {
       },
       {
         date: "Aug 13, 2026",
-        text: "The frontier arms joined the board. Gemini 3.1 Pro topped it untouched; Claude Opus 5 gained +22 from community retrieval - a clean read on knowledge versus skill. The internal method page was opened to the whole team and the cost ledger rebuilt.",
+        text: "The frontier arms joined the board. Gemini 3.1 Pro topped it untouched; Claude Opus 5 gained +22 from community retrieval - a clean read on knowledge versus skill. This page was made public and the cost ledger rebuilt.",
       },
       {
         date: "Aug 14, 2026",
-        text: "A working grammar deduced from all the evidence, and METHOD v3, which enshrines only its strongest-graded rules in the system prompt.",
+        text: "A working grammar deduced from all the evidence (tasks/igala-grammar-deduced.md) and METHOD v3, which enshrines only its A- and B-grade rules in the system prompt.",
       },
       {
         date: "Aug 17, 2026",
@@ -408,7 +413,7 @@ export const howItWorks = {
       },
       {
         date: "Aug 29, 2026",
-        text: "Permission arrived for previously restricted sources - PanLex, GRN's “Words of Life” recording (signed agreement, Aug 27), the JWAL papers, Egbunu's proverbs study, and Arokoyo's phonology - granted on calls with the rights holders, written terms held by Wikitongues. The GRN audio (45:38, the only usable Igala speech asset) and six Bible-for-Children booklets were acquired as raw assets; the booklets' fonts silently strip the ẹ/ọ subdots on extraction, so nothing from them may enter the corpus until that is solved. No text was ingested under any of these grants yet - the corpus counters above are unchanged, and any future ingestion happens only after the written terms are confirmed.",
+        text: "Global Recordings Network signed a copyright agreement (Aug 27) covering their “Words of Life” Igala recording, and the audio (45:38, the only usable Igala speech asset) was acquired, along with six Bible-for-Children booklets as raw assets; the booklets' fonts silently strip the ẹ/ọ subdots on extraction, so nothing from them may enter the corpus until that is solved. Outreach to other rights holders (the JWAL papers, Egbunu's proverbs study, PanLex) is in progress, with a call with the JWAL author scheduled; none of their text enters the corpus before written permission is on file, so the corpus counters above are unchanged.",
       },
     ] as ChangelogEntry[],
   },
