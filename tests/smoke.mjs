@@ -119,13 +119,13 @@ const hiwRequired = [
   "How it works",
   "The whole system",
   "The Igala community",
-  "Assembled context",
+  "The packed prompt",
   "leak guard",
   // journey
   "v0 - plain models",
-  "v3 - a grammar",
+  "v3 - teach it the grammar",
   // assembly
-  "THE METHOD (system prompt)",
+  "The rules (system prompt)",
   "passes the leak guard",
   // the verbatim prompts + their provenance labels
   "You are a fluent native speaker of Igala",

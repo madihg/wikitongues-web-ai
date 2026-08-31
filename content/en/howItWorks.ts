@@ -1,9 +1,10 @@
 // Long-form copy for the public /how-it-works page: the Igala pilot end to
-// end, for funders, allies, and community members. Content parity with the
-// annotation app's researcher-facing How-it-works page, retold in this site's
-// voice. Kept out of JSX (house rule) so it stays translatable and reviewable.
-// House style: no em dashes (use " - "), no emojis, institutions and roles
-// rather than individual annotators' names.
+// end, for funders, allies, and community members - written for readers who
+// have never touched machine learning. Kept out of JSX (house rule) so it
+// stays translatable and reviewable.
+// House style: plain short sentences, no em dashes, every term of art named
+// once and explained in normal words; institutions and roles rather than
+// individual annotators' names.
 //
 // LIVE NUMBERS. Strings under `live` templates carry {tokens} that the page
 // fills from GET /api/public/method-metrics at view time. Where a sentence
@@ -37,6 +38,8 @@ export interface DiagramBox {
   title: string;
   line1?: string;
   line2?: string;
+  /** Small italic footnote rendered inside the box. */
+  aside?: string;
 }
 
 export interface ChangelogEntry {
@@ -48,16 +51,16 @@ export const howItWorks = {
   meta: {
     title: "How it works",
     description:
-      "The Igala pilot end to end: who teaches the models, how every answer is assembled, the exact prompts the models receive, and an honestly measured scoreboard - with numbers fetched live from the project database.",
+      "Igala speakers are teaching AI models their language. This page shows how: who writes the answers, how each answer is built, the exact instructions the models receive, and an honestly measured scoreboard.",
   },
 
   hero: {
     overline: "The whole machine",
     title: "How it works",
     intro:
-      "Ask most AI models a question in Igala and they answer in Yoruba or English instead. This project has Igala speakers teach the models their language - by writing answers, judging outputs blind, and correcting mistakes - and measures honestly how far that teaching has gotten.",
+      "Ask most AI models a question in Igala and they answer in Yoruba or English instead. So Igala speakers are teaching the models their own language: they write answers, compare model answers without knowing which model wrote what, and fix mistakes by hand. This page shows the whole thing, in plain words.",
     intro2:
-      "Every figure on this page is fetched from the project database while you read, computed by the same code the research harness uses. Nothing numeric is saved into this page, so nothing here can go stale: when the live feed is unreachable, the page says so instead of showing old numbers as current.",
+      "Every number on this page is fetched from the project database while you read. Nothing is typed in by hand, so nothing can quietly go stale. And when the live feed is down, the page says so instead of showing old numbers as current.",
   },
 
   // Shared strings for every live-data state on the page.
@@ -65,14 +68,14 @@ export const howItWorks = {
     loadingLabel: "loading",
     unavailableShort: "live numbers unavailable",
     unavailableNote:
-      "Live numbers unavailable right now. This page shows figures only when it can fetch them fresh from the project database - never from a saved copy. Reload in a minute to try again.",
+      "Live numbers unavailable right now. This page shows figures only when it can fetch them fresh from the project database, never from a saved copy. Reload in a minute to try again.",
     computedPrefix: "Computed from the live project database,",
     statsFootnote:
       "Counts exclude demo sessions; the annotator count also excludes seed test accounts.",
     stats: [
-      { key: "goldAnswers", label: "gold answers written by speakers" },
+      { key: "goldAnswers", label: "answers written by speakers" },
       { key: "pairwiseComparisons", label: "blind comparisons judged" },
-      { key: "parallelPairs", label: "parallel Igala-English sentences" },
+      { key: "parallelPairs", label: "Igala-English sentence pairs" },
       { key: "lexEntries", label: "dictionary entries served" },
       { key: "annotators", label: "community annotators" },
       { key: "frozenPrompts", label: "questions in the frozen exam" },
@@ -84,7 +87,7 @@ export const howItWorks = {
     overline: "One picture",
     title: "The whole system",
     intro:
-      "Four layers, read top to bottom: the community produces the knowledge, the knowledge is assembled around each question, a model answers, and every answer flows back to the community for judgment - which becomes new knowledge. The dashed loop on the left is the whole idea.",
+      "Four layers, read top to bottom. The community produces the knowledge. The knowledge is packed around each question. A model answers. And every answer goes back to the community for judgment, which becomes new knowledge. The loop on the left is the whole idea.",
     diagram: {
       communityTitle: "The Igala community",
       communityTitleCounted: "The Igala community - {annotators} annotators",
@@ -96,48 +99,50 @@ export const howItWorks = {
           line1: "what was wrong, fixed by a speaker",
         },
       ] as DiagramBox[],
-      knowledgeLabel: "KNOWLEDGE - the standing corpus, growing every session",
+      knowledgeLabel: "The knowledge, growing every session",
       knowledgeBoxes: [
         {
-          title: "Community gold",
+          title: "Community answers",
           line1: "{goldAnswers} question-answer pairs",
-          line2: "the register anchor",
+          line2: "how the community actually writes",
         },
         {
           title: "Dictionary",
           line1: "{lexEntries} word-meaning entries",
-          line2: "curated + induced from the Bible",
+          line2: "hand-checked, plus words learned from the Bible corpus",
         },
         {
-          title: "Parallel sentences",
+          title: "Example sentences",
           line1: "{parallelPairs} Igala-English pairs",
           line2: "how sentences are built",
         },
+        {
+          title: "Grammar rules",
+          line1: "read out of all the evidence",
+          line2: "only rules confirmed by two sources ship",
+          aside: "the rules travel as instructions, not as pasted text",
+        },
       ] as DiagramBox[],
-      grammarBox: {
-        title: "Deduced grammar > system prompt",
-        line1: "rules read out of all the evidence,",
-        line2: "only two-source-verified rules ship",
-      } as DiagramBox,
-      grammarAside: "rules travel as instructions, not retrieved prose",
-      servingLabel: "PER QUESTION - assembled fresh every time",
+      servingLabel: "Answering one question, packed fresh every time",
       questionBox: { title: "Question", line1: "from a person" } as DiagramBox,
       retrievalBox: {
         title: "Retrieval",
         line1: "best-matching pieces",
       } as DiagramBox,
-      leakGuardNote: "leak guard: no exam question is ever handed its own answer",
-      contextTitle: "Assembled context",
+      leakGuardLabel: "leak guard",
+      leakGuardNote:
+        "the leak guard checks every retrieved piece, so no exam question is ever handed its own answer",
+      contextTitle: "The packed prompt",
       contextLines: [
-        "1  THE METHOD (system prompt: the rules)",
-        "2  gold Q&A exemplars (register)",
-        "3  parallel sentences (structure prompts only)",
+        "1  the rules: how to use everything below",
+        "2  real answers by speakers: what good sounds like",
+        "3  example sentences: how Igala is built",
         "4  dictionary lines for this question's words",
-        "5  the question + one-line output contract",
+        "5  the question, plus one closing rule",
       ],
       modelBox: { title: "Model", line1: "any of them" } as DiagramBox,
       answerBox: { title: "Answer", line1: "in Igala" } as DiagramBox,
-      judgmentLabel: "JUDGMENT - the only measure that finally counts",
+      judgmentLabel: "Judgment, the only measure that finally counts",
       judgmentBox: {
         title: "Native judgment",
         line1: "blind pairs + corrections on the strongest models",
@@ -155,52 +160,53 @@ export const howItWorks = {
         line1: "100 = two native speakers' agreement with each other",
         line2: "the bars below",
       } as DiagramBox,
+      returnLabel: "answers become new knowledge",
+      mobileReturnLabel: "and everything loops back to the top",
       flywheelLines: [
-        "The flywheel: every judgment and correction re-enters the",
-        "knowledge, the grammar, and the next round of models. The",
-        "community is not labeling for the system - the community IS the system.",
+        "Every judgment and every correction re-enters the knowledge,",
+        "the grammar, and the next round of models. The community is not",
+        "labeling data for a system. The community IS the system.",
       ],
     },
     caption:
-      "Counts in the diagram are fetched live, from the same computation as the numbers above. The red filter is the leak guard: every retrieved piece is checked so no benchmark question is ever served its own answer - the reason the scores below can be believed.",
+      "Counts in the picture are fetched live, from the same computation as the numbers above. The red funnel is the leak guard: every retrieved piece is checked, so no exam question is ever handed its own answer. That check is the reason the scores below can be believed.",
   },
 
   journey: {
     id: "journey",
-    overline: "The journey",
+    overline: "The story so far",
     title: "Four versions of the same idea",
     intro:
-      "The models never learn Igala the way a person does. Each version of the system changes what real Igala the model gets to see at the moment it answers, and each fix exposed the next problem.",
+      "None of these models learns Igala the way a person does. Each version changes what real Igala the model gets to see at the moment it answers. And each fix exposed the next problem.",
     fixedLabel: "What it fixed",
     missingLabel: "What it did not",
     stages: [
       {
         name: "v0 - plain models",
-        sub: "Ask a frontier model, nothing added",
-        fixed: "Nothing yet: this is the baseline.",
+        sub: "Ask a top model, nothing added",
+        fixed: "Nothing yet. This is the baseline.",
         missing:
-          "Asked for Igala, models answer in Yoruba or English - invented words, wrong language.",
+          "Asked for Igala, the models answer in Yoruba or English, with invented words in between.",
       },
       {
-        name: "v1 - retrieval",
-        sub: "Paste community answers into the prompt",
-        fixed: "Real Igala words appear in answers.",
+        name: "v1 - show it real answers",
+        sub: "Community answers pasted into the prompt",
+        fixed: "Real Igala words start appearing.",
         missing:
           "Words without sentence structure. A community reviewer put it plainly: the first sentence is saying three different things.",
       },
       {
-        name: "v2 - a method",
-        sub: "Dictionary + parallel Bible sentences + a procedure",
-        fixed: "Attested spellings, copied sentence shape.",
-        missing:
-          "Still copying, not speaking. v1 and v2 both stay live in chat for native structural review.",
+        name: "v2 - give it a method",
+        sub: "A dictionary, example sentences, and a step-by-step procedure",
+        fixed: "Correct spellings, and sentence shapes copied from real ones.",
+        missing: "Still copying, not speaking.",
       },
       {
-        name: "v3 - a grammar",
-        sub: "v2's package + a grammar deduced from the evidence",
-        fixed: "Pronouns, negation, word order as rules.",
+        name: "v3 - teach it the grammar",
+        sub: "Everything in v2, plus grammar rules read out of the evidence",
+        fixed: "Pronouns, negation and word order arrive as rules.",
         missing:
-          "Only rules verified across two independent source classes are enshrined; greetings stay retrieval-served. Speakers still judge structure.",
+          "Only rules confirmed by two independent sources ship. Speakers still judge the structure.",
       },
     ] as JourneyStage[],
   },
@@ -210,39 +216,39 @@ export const howItWorks = {
     overline: "Zooming in",
     title: "How one answer is built today",
     intro:
-      "When someone asks a question, the system assembles a package around it, in this order, and sends the whole package to the model. v3 uses this exact same package and changes only the first piece - its system prompt adds the deduced grammar - so any difference between v2 and v3 scores is attributable to that one change.",
+      "When someone asks a question, the system packs a bundle around it, in this order, and sends the whole bundle to the model. v3 uses the exact same bundle and changes only the first piece, the rules. So any difference between v2 and v3 comes from that one change.",
     intro2:
-      "Every piece retrieved for a benchmark question first passes a leak guard: if a piece contains that question's own community answer, it is dropped and the drop is recorded - otherwise the test would hand the model its answer key.",
+      "One more thing happens first. On exam questions, every piece passes the leak guard: if a piece contains that question's own community answer, it is dropped and the drop is recorded. Otherwise the test would hand the model its answer key.",
     guardBadge: "passes the leak guard",
     steps: [
       {
-        title: "THE METHOD (system prompt)",
-        why: "A numbered procedure telling the model how to use the material below - dictionary for word forms, examples for sentence shape - because the failure mode is a model that has the material and does not know what to do with it.",
+        title: "The rules (system prompt)",
+        why: "A numbered procedure telling the model how to use everything below: the dictionary for word forms, the examples for sentence shape. Without it, a model can hold all the material and still not know what to do with it.",
         guarded: false,
       },
       {
-        title: "Community gold Q&A exemplars",
-        why: "Real question-and-answer pairs written by Igala speakers, shown as example exchanges, so the model sees what a good answer looks and sounds like - terse, in Igala, spelled the community's way.",
+        title: "Real answers by speakers",
+        why: "Question-and-answer pairs written by Igala speakers, shown as example exchanges. The model sees what a good answer looks and sounds like: short, in Igala, spelled the community's way.",
         guarded: true,
       },
       {
-        title: "Parallel example sentences (Igala-English pairs)",
-        why: "Bible-corpus sentence pairs that show how Igala sentences are built. Served only for questions that ask the model to build something - a sentence, a story, a greeting - because word-lookup questions were measurably hurt by them.",
+        title: "Example sentences (Igala-English pairs)",
+        why: "Sentence pairs that show how Igala sentences are built. Served only when the question asks the model to build something, a sentence or a story or a greeting, because word-lookup questions were measurably hurt by them.",
         guarded: true,
       },
       {
-        title: "Per-word dictionary lines",
-        why: "One line per content word of the question that the dictionary attests, with the exact attested Igala form. Placed immediately above the question because spelling is meaning in Igala - a changed letter is a different word, not a typo.",
+        title: "Dictionary lines for this question's words",
+        why: "One line per meaningful word of the question, with the exact attested Igala form. Placed right above the question because in Igala spelling is meaning: a changed letter is a different word, not a typo.",
         guarded: true,
       },
       {
         title: "The question",
-        why: "The user's actual question, unchanged.",
+        why: "The person's actual question, unchanged.",
         guarded: false,
       },
       {
-        title: "Terminal contract",
-        why: "One closing line under the question restating the output rule - answer in Igala only, nothing else - because instructions at both ends of a long prompt hold better than instructions at one.",
+        title: "One closing rule",
+        why: "A single line under the question restating the output rule: answer in Igala only, nothing else. Instructions at both ends of a long prompt hold better than instructions at one end.",
         guarded: false,
       },
     ] as AssemblyStep[],
@@ -253,69 +259,70 @@ export const howItWorks = {
     overline: "No secrets",
     title: "The exact instructions the models receive",
     intro:
-      "This is the v2 system prompt, reproduced verbatim - not a paraphrase and not a summary. Publishing it is deliberate: a community should be able to read every instruction issued in its language's name.",
+      "These are the real system prompts, word for word, not a summary. Publishing them is deliberate: a community should be able to read every instruction issued in its language's name. Each one opens with a click.",
     provenance:
-      "This site is a static page and cannot execute the annotation app's code, so the prompts below are byte-for-byte copies taken from the serving code on {copiedOn}, each labelled with its source file and commit. If a serving prompt changes after that date, the copy here lags until the site is rebuilt - the app itself always renders the version actually in service.",
+      "This site is a static page and cannot run the annotation app's code, so the prompts below are byte-for-byte copies taken from the serving code on {copiedOn}, each labelled with its source file and commit. If a serving prompt changes after that date, the copy here lags until the site is rebuilt; the app itself always shows the version actually in service.",
     snapshotLine: "{file} at commit {commit} ({commitDate}) - copied {copiedOn}",
+    expandHint: "click to read the full text",
     v2Label: "System prompt, v2 (the method)",
     v3Intro:
-      "And the v3 system prompt - the same skeleton plus closed-class grammar and register sections, every line traced to a rule verified across at least two independent source classes in the grammar deduced from the community's evidence:",
+      "The v3 prompt is the same skeleton plus the grammar: every added line traces to a rule confirmed by at least two independent sources in the evidence the community produced.",
     v3Label: "System prompt, v3 (the method + the grammar)",
     terminalIntro: "And the one line appended below every question:",
-    terminalLabel: "Terminal contract",
+    terminalLabel: "The closing rule",
   },
 
   benchmark: {
     id: "benchmark",
     overline: "Honest measurement",
-    title: "The benchmark: Community Agreement Score",
+    title: "The scoreboard: Community Agreement Score",
     intro: {
-      live: "Every model faces the same {frozenPrompts}-question frozen exam - questions the models never saw during any adaptation step - and each answer is compared with what Igala speakers wrote for that question. The chart borrows the familiar benchmark layout - longer bar, closer to how the community actually writes - but the yardstick is agreement with this one community's writing, on Igala questions only. It is not comparable to general-knowledge benchmarks, and a high bar here claims nothing beyond Igala.",
+      live: "Every model takes the same exam: {frozenPrompts} frozen questions that no model ever saw during teaching. Each answer is compared with what Igala speakers wrote for the same question. A longer bar means closer to how the community actually writes. The yardstick is this one community's writing, on Igala questions only. A high bar here claims nothing beyond Igala.",
       fallback:
-        "Every model faces the same frozen exam - questions the models never saw during any adaptation step - and each answer is compared with what Igala speakers wrote for that question. The chart borrows the familiar benchmark layout - longer bar, closer to how the community actually writes - but the yardstick is agreement with this one community's writing, on Igala questions only. It is not comparable to general-knowledge benchmarks, and a high bar here claims nothing beyond Igala.",
+        "Every model takes the same exam: a set of frozen questions that no model ever saw during teaching. Each answer is compared with what Igala speakers wrote for the same question. A longer bar means closer to how the community actually writes. The yardstick is this one community's writing, on Igala questions only. A high bar here claims nothing beyond Igala.",
     },
     chart: {
       referenceLineLabel: "native speaker agreement",
       showAllLabel: "Show all {count} models",
       underpoweredMark:
-        "* too few leak-free answers for an interval - point estimate only.",
+        "* too few leak-free answers for an uncertainty range - single estimate only.",
       footnote:
-        "100 = one native speaker's agreement with another (chrF {ceilingChrf} on the same questions, one answer per speaker). Scored on the {leakFreePrompts} leak-free frozen questions; whiskers are 95% bootstrap intervals over per-question scores. A bar past the 100 line means the model matched the community's writing more closely than one speaker matches another - shown as measured, never capped.",
+        "100 = one native speaker's agreement with another (chrF {ceilingChrf} on the same questions, one answer per speaker). Scored on the {leakFreePrompts} leak-free frozen questions. The whiskers show the uncertainty: re-draw the exam questions and the score lands inside them 95 times out of 100. A bar past the 100 line means the model matched the community's writing more closely than one speaker matches another; it is shown as measured, never capped.",
       loadingNote:
         "Fetching the scoreboard from the project database. Values on this chart are only ever shown live.",
       emptyNote:
-        "The Community Agreement Score cannot be drawn yet: it needs at least one leak-free test question answered by two different native speakers to anchor its 100 line. Until then, no scale - not a made-up one.",
+        "The Community Agreement Score cannot be drawn yet: it needs at least one leak-free exam question answered by two different native speakers to anchor its 100 line. Until then, no scale. Not a made-up one either.",
     },
     explainer: [
       {
         title: "What the score means.",
-        live: "Underneath is chrF, the standard character-overlap metric machine translation systems are scored with: 0-100 for how much an answer's characters overlap with the community's answers, computed on the stripped answer so an English preamble cannot inflate it. We then rescale it so that the agreement between two native speakers reads exactly 100. A score of 85 means: this model's answers are 85% as close to the community's writing as one native speaker's answers are to another's.",
+        live: "Underneath is chrF, the standard overlap score used to grade machine translation: 0 to 100 for how much an answer's letters and letter-pairs overlap with the community's answers, measured on the answer itself so an English preamble cannot inflate it. We then rescale it so that the agreement between two native speakers reads exactly 100. A score of 85 means: this model's answers are 85% as close to the community's writing as one speaker's answers are to another's.",
         fallback:
-          "Underneath is chrF, the standard character-overlap metric machine translation systems are scored with: 0-100 for how much an answer's characters overlap with the community's answers, computed on the stripped answer so an English preamble cannot inflate it. We then rescale it so that the agreement between two native speakers reads exactly 100. A score of 85 means: this model's answers are 85% as close to the community's writing as one native speaker's answers are to another's.",
+          "Underneath is chrF, the standard overlap score used to grade machine translation: 0 to 100 for how much an answer's letters and letter-pairs overlap with the community's answers, measured on the answer itself so an English preamble cannot inflate it. We then rescale it so that the agreement between two native speakers reads exactly 100. A score of 85 means: this model's answers are 85% as close to the community's writing as one speaker's answers are to another's.",
       },
       {
         title: "A worked example.",
-        live: "Suppose a test question asks for a word and two speakers wrote the same five letters, differing only in one accent mark - their overlap is high but not perfect, and that speaker-to-speaker overlap is what the 100 line is anchored to. A model whose answer shares four of those five letters in order lands near the line; a model that answers in English shares almost no characters and lands near zero.",
+        live: "Say a question asks for one word, and two speakers wrote the same five letters with one accent mark different. Their overlap is high but not perfect, and that speaker-to-speaker overlap is what the 100 line is anchored to. A model that shares four of those five letters lands near the line. A model that answers in English shares almost nothing and lands near zero.",
         fallback:
-          "Suppose a test question asks for a word and two speakers wrote the same five letters, differing only in one accent mark - their overlap is high but not perfect, and that speaker-to-speaker overlap is what the 100 line is anchored to. A model whose answer shares four of those five letters in order lands near the line; a model that answers in English shares almost no characters and lands near zero.",
+          "Say a question asks for one word, and two speakers wrote the same five letters with one accent mark different. Their overlap is high but not perfect, and that speaker-to-speaker overlap is what the 100 line is anchored to. A model that shares four of those five letters lands near the line. A model that answers in English shares almost nothing and lands near zero.",
       },
       {
         title: "Why 100 is native agreement, not perfection.",
-        live: 'Two Igala speakers answering the same question rarely write the identical string - spelling varies, tone marks vary, phrasing varies. So the honest yardstick is not "matched the answer key" (there is no single answer key) but "agreed with the community as much as its own members agree with each other". That is also why a bar can pass 100: matching the pooled community answers more closely than one speaker matches another is possible, and when it happens the chart shows it rather than clamping it.',
+        live: "Two Igala speakers answering the same question rarely write the identical string. Spelling varies, tone marks vary, phrasing varies. So the honest yardstick is not a single answer key (there is none). It is how much the community agrees with itself. That is also why a bar can pass 100: matching the pooled community answers more closely than one speaker matches another is possible, and when it happens the chart shows it rather than hiding it.",
         fallback:
-          'Two Igala speakers answering the same question rarely write the identical string - spelling varies, tone marks vary, phrasing varies. So the honest yardstick is not "matched the answer key" (there is no single answer key) but "agreed with the community as much as its own members agree with each other". That is also why a bar can pass 100: matching the pooled community answers more closely than one speaker matches another is possible, and when it happens the chart shows it rather than clamping it.',
+          "Two Igala speakers answering the same question rarely write the identical string. Spelling varies, tone marks vary, phrasing varies. So the honest yardstick is not a single answer key (there is none). It is how much the community agrees with itself. That is also why a bar can pass 100: matching the pooled community answers more closely than one speaker matches another is possible, and when it happens the chart shows it rather than hiding it.",
       },
       {
         title: "Why it is measured on the leak-free subset.",
-        live: "{leakedPrompts} of {frozenPrompts} frozen questions once had one of their own community answers included in material served to the models; on those, a high score measures copying, not competence. The score therefore uses only the {leakFreePrompts} questions where that never happened, and its ceiling is computed on those same questions with one answer per speaker - repeat submissions by the same person do not count as agreement.",
+        live: "{leakedPrompts} of {frozenPrompts} frozen questions once had one of their own community answers slip into the material served to the models. On those questions a high score measures copying, not competence. So the score uses only the {leakFreePrompts} questions where that never happened, and its 100 line is computed on those same questions with one answer per speaker: someone re-submitting their own answer does not count as two people agreeing.",
         fallback:
-          "During an early audit, some frozen questions were found to have had one of their own community answers included in material served to the models; on those, a high score measures copying, not competence. The score therefore uses only the questions where that never happened, and its ceiling is computed on those same questions with one answer per speaker - repeat submissions by the same person do not count as agreement.",
+          "During an early audit, some frozen questions were found to have had one of their own community answers slip into the material served to the models. On those questions a high score measures copying, not competence. So the score uses only the questions where that never happened, and its 100 line is computed with one answer per speaker: someone re-submitting their own answer does not count as two people agreeing.",
       },
       {
         title: 'Why we do not call it "% fluent".',
-        live: "chrF measures resemblance to how the community writes; only native judgment measures fluency. In {pairwiseComparisons} blind comparisons to date, speakers found both answers inadequate {noPreferencePct} of the time. So these bars chart progress from does-not-speak-Igala toward speaks-it-badly, and the speakers judge the rest.",
+        live: "The score measures resemblance to how the community writes. Only native judgment measures fluency. In {pairwiseComparisons} blind comparisons to date, speakers found both answers inadequate {noPreferencePct} of the time. So these bars chart progress from does-not-speak-Igala toward speaks-it-badly, and the speakers judge the rest.",
         fallback:
-          "chrF measures resemblance to how the community writes; only native judgment measures fluency. In blind comparisons to date, speakers have most often found both answers inadequate. So these bars chart progress from does-not-speak-Igala toward speaks-it-badly, and the speakers judge the rest.",
+          "The score measures resemblance to how the community writes. Only native judgment measures fluency. In blind comparisons to date, speakers have most often found both answers inadequate. So these bars chart progress from does-not-speak-Igala toward speaks-it-badly, and the speakers judge the rest.",
       },
     ] as ExplainerBlock[],
     poolSentence: {
@@ -344,11 +351,11 @@ export const howItWorks = {
       },
       ceilingApproach: "speakers vs speakers",
       note1:
-        "These are the raw chrF values the agreement score is rescaled from - where a provider quota cut a run short, the n column shows fewer answers.",
+        "These are the raw chrF values the agreement score is rescaled from. Where a provider quota cut a run short, the n column shows fewer answers.",
       note2: {
-        live: "Why the ceiling is about {honestCeilingChrfAll}, not 100. Two Igala speakers answering the same question rarely write the identical string, so even a perfect model cannot score 100 in raw chrF. We first published a ceiling of {shippedCeilingChrfAll}, but that number counted people re-submitting their own answer as two speakers agreeing. One answer per speaker gives the honest limit, and both versions are shown above so the correction stays visible.",
+        live: "Why the ceiling is about {honestCeilingChrfAll}, not 100. Two Igala speakers answering the same question rarely write the identical string, so even a perfect model cannot score 100 in raw chrF. We first published a ceiling of {shippedCeilingChrfAll}, but that number counted people re-submitting their own answer as two speakers agreeing. One answer per speaker gives the honest limit, and both versions stay above so the correction stays visible.",
         fallback:
-          "Why the ceiling sits well below 100. Two Igala speakers answering the same question rarely write the identical string, so even a perfect model cannot score 100 in raw chrF. The first published ceiling counted people re-submitting their own answer as two speakers agreeing; one answer per speaker gives the honest limit, and both versions are shown above so the correction stays visible.",
+          "Why the ceiling sits well below 100. Two Igala speakers answering the same question rarely write the identical string, so even a perfect model cannot score 100 in raw chrF. The first published ceiling counted people re-submitting their own answer as two speakers agreeing. One answer per speaker gives the honest limit, and both versions stay above so the correction stays visible.",
       },
     },
   },
@@ -359,22 +366,22 @@ export const howItWorks = {
     title: "What is being tested now",
     items: [
       {
-        title: "v1 versus v2, judged by the community.",
-        live: "The scoreboard cannot see sentence structure - character overlap treats a coherent sentence and a word salad with the same words alike, and because the frozen questions are mostly single-word lookups, v1 can outrank v2 there even where v2's sentences are better built. Both versions stay live in the chat so the community's review team can judge, side by side, exactly the thing the benchmark cannot measure.",
+        title: "The blind test: best recipe per model, against a bare control.",
+        live: "Right now speakers judge blind pairs drawn from three systems: Gemini with the grammar (v3), Claude with community examples (v1), and plain Gemini with nothing added, as the control. Each model family keeps its own best recipe, because the evidence says they want different help: the grammar that lifts Gemini measurably hurts Claude, and Claude does best when shown real community answers instead. The speakers never know which system wrote which answer.",
         fallback:
-          "The scoreboard cannot see sentence structure - character overlap treats a coherent sentence and a word salad with the same words alike, and because the frozen questions are mostly single-word lookups, v1 can outrank v2 there even where v2's sentences are better built. Both versions stay live in the chat so the community's review team can judge, side by side, exactly the thing the benchmark cannot measure.",
+          "Right now speakers judge blind pairs drawn from three systems: Gemini with the grammar (v3), Claude with community examples (v1), and plain Gemini with nothing added, as the control. Each model family keeps its own best recipe, because the evidence says they want different help: the grammar that lifts Gemini measurably hurts Claude, and Claude does best when shown real community answers instead. The speakers never know which system wrote which answer.",
       },
       {
         title: "The me- numeral question.",
-        live: "Aligning the Bible parallel corpus surfaced numeral forms with a me- prefix (meji, meta) alongside the dictionary's plain citation forms (eji, eta). The reference grammar says Igala agreement is governed by number, which makes a numeral concord form plausible - but plausible is not confirmed, so the question goes to speakers before the corpus teaches the model a pattern the community has not confirmed.",
+        live: "Lining up the Bible sentence pairs surfaced number words with a me- prefix (meji, meta) alongside the dictionary's plain forms (eji, eta). The reference grammar makes a special counting form plausible. But plausible is not confirmed, so the question goes to speakers before the corpus teaches the model a pattern the community has not signed off on.",
         fallback:
-          "Aligning the Bible parallel corpus surfaced numeral forms with a me- prefix (meji, meta) alongside the dictionary's plain citation forms (eji, eta). The reference grammar says Igala agreement is governed by number, which makes a numeral concord form plausible - but plausible is not confirmed, so the question goes to speakers before the corpus teaches the model a pattern the community has not confirmed.",
+          "Lining up the Bible sentence pairs surfaced number words with a me- prefix (meji, meta) alongside the dictionary's plain forms (eji, eta). The reference grammar makes a special counting form plausible. But plausible is not confirmed, so the question goes to speakers before the corpus teaches the model a pattern the community has not signed off on.",
       },
       {
         title: "Pending unlocks.",
-        live: "The Idakwoji lexicon, a published dictionary of roughly 5,000 headwords, against the {lexEntries} dictionary lines the system serves from today - lexical coverage, not model architecture, is the binding constraint. And a collaborating linguist's syntax write-up, to turn structural review into data.",
+        live: "A published Igala dictionary of roughly 5,000 headwords, against the {lexEntries} dictionary lines the system serves from today. Word coverage, not model cleverness, is the current limit. And a collaborating linguist's write-up of Igala sentence structure, to turn the speakers' structural review into teachable rules.",
         fallback:
-          "The Idakwoji lexicon, a published dictionary of roughly 5,000 headwords, several times the dictionary the system serves from today - lexical coverage, not model architecture, is the binding constraint. And a collaborating linguist's syntax write-up, to turn structural review into data.",
+          "A published Igala dictionary of roughly 5,000 headwords, several times what the system serves from today. Word coverage, not model cleverness, is the current limit. And a collaborating linguist's write-up of Igala sentence structure, to turn the speakers' structural review into teachable rules.",
       },
     ] as ExplainerBlock[],
   },
@@ -384,7 +391,7 @@ export const howItWorks = {
     overline: "The record",
     title: "What changed, when",
     intro:
-      "The dates are fixed history - what each day added and what it corrected. Every live number they produced is recomputed above, not repeated here.",
+      "The dates are fixed history: what each day added and what it corrected. Every live number they produced is recomputed above, not repeated here.",
     // VERBATIM from the annotation app's CHANGELOG constant
     // (web/src/app/how-it-works/page.tsx). The record is shared history; the
     // two pages must tell it in the same words. When the app's changelog gains
