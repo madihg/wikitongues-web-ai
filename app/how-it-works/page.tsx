@@ -11,6 +11,8 @@ import { fill } from "@/components/how-it-works/format";
 import {
   igalaSystemV2,
   igalaSystemV3,
+  igalaSystemV4,
+  igalaSystemV41,
   igalaTerminalContract,
   promptsCopiedOn,
 } from "@/content/en/igalaPrompts";
@@ -143,6 +145,14 @@ export default function HowItWorksPage() {
           {hw.prompts.v3Intro}
         </p>
         <PromptBlock label={hw.prompts.v3Label} snapshot={igalaSystemV3} />
+        <p className="mt-8 max-w-measure text-lg leading-relaxed text-muted">
+          {hw.prompts.v4Intro}
+        </p>
+        <PromptBlock label={hw.prompts.v4Label} snapshot={igalaSystemV4} />
+        <p className="mt-8 max-w-measure text-lg leading-relaxed text-muted">
+          {hw.prompts.v41Intro}
+        </p>
+        <PromptBlock label={hw.prompts.v41Label} snapshot={igalaSystemV41} />
         <p className="mt-8 max-w-measure text-lg leading-relaxed text-muted">
           {hw.prompts.terminalIntro}
         </p>

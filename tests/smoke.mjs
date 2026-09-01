@@ -136,15 +136,17 @@ const hiwRequired = [
   "d1cec50cb417",
   // benchmark story (prose ships static; scores are live-only)
   "Community Agreement Score",
-  "Why 100 is native agreement, not perfection.",
-  "Why it is measured on the leak-free subset.",
+  "Why a bar can pass 100, and why that was our mistake.",
+  "Why it is measured on the leak-free subset, and who wrote the answers.",
   // open questions + the dated record
-  "The me- numeral question.",
+  "Two grammar questions only speakers can settle.",
   "What changed, when",
   "Aug 17, 2026",
   // the Aug 29 entry states documented facts only: GRN's signed agreement,
   // everything else outreach in progress (see how-it-works-page.test.ts)
   "Aug 29, 2026",
+  "Sep 1, 2026",
+  "mostly built in",
   "Global Recordings Network signed a copyright agreement (Aug 27)",
   "Outreach to other rights holders",
 ];

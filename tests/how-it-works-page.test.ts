@@ -4,6 +4,8 @@ import { howItWorks } from "@/content/en/howItWorks";
 import {
   igalaSystemV2,
   igalaSystemV3,
+  igalaSystemV4,
+  igalaSystemV41,
   igalaTerminalContract,
   promptsCopiedOn,
   type PromptSnapshot,
@@ -81,14 +83,14 @@ function sampleMetrics(): PublicMethodMetrics {
 
 describe("how-it-works page content", () => {
   it("has the shapes the components expect", () => {
-    expect(howItWorks.journey.stages).toHaveLength(4);
-    expect(howItWorks.assembly.steps).toHaveLength(6);
+    expect(howItWorks.journey.stages).toHaveLength(6);
+    expect(howItWorks.assembly.steps).toHaveLength(7);
     expect(
       howItWorks.assembly.steps.filter((s) => s.guarded),
-    ).toHaveLength(3);
+    ).toHaveLength(4);
     expect(howItWorks.benchmark.explainer).toHaveLength(5);
     expect(howItWorks.testedNow.items).toHaveLength(3);
-    expect(howItWorks.changelog.entries).toHaveLength(6);
+    expect(howItWorks.changelog.entries).toHaveLength(8);
     expect(howItWorks.live.stats).toHaveLength(6);
     for (const e of howItWorks.changelog.entries) {
       // fixed history: a dated label like "Aug 17, 2026"
@@ -111,7 +113,7 @@ describe("how-it-works page content", () => {
     // add a claim (especially about permissions) beyond the app's exact text.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "5a1b479e9ff37f9f203269a2991e0e2303f0158c7f37e390ae381aa1d44c2250",
+      "c8f3518b87cd487227f80b8ceba76ccb95894ae924bbff21c82103688da66a75",
     );
   });
 
@@ -130,6 +132,33 @@ describe("how-it-works page content", () => {
       "none of their text enters the corpus before written permission is on file",
     );
     expect(aug29?.text).not.toContain("Permission arrived");
+  });
+
+  it("records the Sep 1 audit corrections and the BSN correction", () => {
+    const aug12 = howItWorks.changelog.entries.find(
+      (e) => e.date === "Aug 12, 2026",
+    );
+    const sep1 = howItWorks.changelog.entries.find(
+      (e) => e.date === "Sep 1, 2026",
+    );
+    expect(aug12?.text).toContain("no permission is on file");
+    // The uncorrected wording joined the claim to the lexicon in one breath.
+    expect(aug12?.text).not.toContain("pairs ingested under BSN permission -");
+    expect(sep1?.text).toContain("mostly built in");
+    expect(sep1?.text).toContain("No speaker has yet judged v4 or v4.1");
+    expect(sep1?.text).toContain("change of models, not from the method");
+    // The retracted sentence appears only inside quotation marks, as a retraction.
+    expect(sep1?.text).toContain("was not supported and has been removed");
+  });
+
+  it("no longer claims the grammar lifts Gemini measurably, anywhere", () => {
+    const serialized = JSON.stringify(howItWorks);
+    expect(serialized).not.toContain("lifts Gemini measurably hurts Claude");
+    // The community box used to assert every answer was written cold; the
+    // phrase may survive only as a quoted retraction in the explainer.
+    expect(howItWorks.system.diagram.communityBoxes[0].line1).not.toContain(
+      "written before seeing any model",
+    );
   });
 
   it("ships behind an enabled feature flag, like the research route", () => {
@@ -154,7 +183,13 @@ describe("how-it-works page content", () => {
     // The sha256 values were computed from the app's serving modules at copy
     // time. If anyone edits the snapshot text in THIS repo, the hash breaks:
     // refresh the copy from the app instead of editing it here.
-    for (const snap of [igalaSystemV2, igalaSystemV3, igalaTerminalContract]) {
+    for (const snap of [
+      igalaSystemV2,
+      igalaSystemV3,
+      igalaSystemV4,
+      igalaSystemV41,
+      igalaTerminalContract,
+    ]) {
       expect(sha256(snap.text)).toBe(snap.sha256);
     }
   });
@@ -164,6 +199,8 @@ describe("how-it-works page content", () => {
     const snaps: PromptSnapshot[] = [
       igalaSystemV2,
       igalaSystemV3,
+      igalaSystemV4,
+      igalaSystemV41,
       igalaTerminalContract,
     ];
     for (const snap of snaps) {
@@ -175,6 +212,10 @@ describe("how-it-works page content", () => {
     // v2 and v3 are genuinely different prompts; the terminal contract is the
     // one line under every question.
     expect(igalaSystemV2.text).not.toBe(igalaSystemV3.text);
+    // v4 rewrote the method around meaning; v4.1 layers the mined rules on v4.
+    expect(igalaSystemV4.text).not.toBe(igalaSystemV3.text);
+    expect(igalaSystemV41.text).not.toBe(igalaSystemV4.text);
+    expect(igalaSystemV41.text.length).toBeGreaterThan(igalaSystemV4.text.length);
     expect(igalaSystemV3.text).toContain("CLOSED-CLASS GRAMMAR");
     expect(igalaTerminalContract.text).toContain("Answer in Igala only");
   });
@@ -259,8 +300,9 @@ describe("how-it-works page content", () => {
       howItWorks.benchmark.table.note2,
     ]) {
       const fallback = "fallback" in block ? block.fallback : "";
-      // digits directly after a letter are version names (v1, v2), not counts
-      for (const m of fallback.matchAll(/(?<![A-Za-z\d])\d[\d,]*/g)) {
+      // version names (v1, v4.1) are not counts: strip them before scanning
+      const scanned = fallback.replace(/\bv\d+(?:\.\d+)?/g, "");
+      for (const m of scanned.matchAll(/(?<![A-Za-z\d])\d[\d,]*/g)) {
         expect(
           allowed.has(m[0]),
           `unexpected number "${m[0]}" in fallback copy: ${fallback.slice(0, 60)}...`,
