@@ -136,7 +136,9 @@ const hiwRequired = [
   "d1cec50cb417",
   // benchmark story (prose ships static; scores are live-only)
   "Community Agreement Score",
-  "Why a bar can pass 100, and why that was our mistake.",
+  "Why a bar could pass 100, what we fixed, and what it revealed.",
+  "Sep 3, 2026",
+  "scores higher than every real system",
   "Why it is measured on the leak-free subset, and who wrote the answers.",
   // open questions + the dated record
   "Two grammar questions only speakers can settle.",

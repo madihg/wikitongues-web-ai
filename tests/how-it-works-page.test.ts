@@ -90,7 +90,7 @@ describe("how-it-works page content", () => {
     ).toHaveLength(4);
     expect(howItWorks.benchmark.explainer).toHaveLength(5);
     expect(howItWorks.testedNow.items).toHaveLength(3);
-    expect(howItWorks.changelog.entries).toHaveLength(8);
+    expect(howItWorks.changelog.entries).toHaveLength(9);
     expect(howItWorks.live.stats).toHaveLength(6);
     for (const e of howItWorks.changelog.entries) {
       // fixed history: a dated label like "Aug 17, 2026"
@@ -113,7 +113,7 @@ describe("how-it-works page content", () => {
     // add a claim (especially about permissions) beyond the app's exact text.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "c8f3518b87cd487227f80b8ceba76ccb95894ae924bbff21c82103688da66a75",
+      "b11d147d28d105409de9935086146329bd5a09bef33fdc50a4a4103dca529236",
     );
   });
 
@@ -149,6 +149,19 @@ describe("how-it-works page content", () => {
     expect(sep1?.text).toContain("change of models, not from the method");
     // The retracted sentence appears only inside quotation marks, as a retraction.
     expect(sep1?.text).toContain("was not supported and has been removed");
+  });
+
+  it("records the Sep 3 tone-control finding without softening it", () => {
+    const sep3 = howItWorks.changelog.entries.find(
+      (e) => e.date === "Sep 3, 2026",
+    );
+    expect(sep3).toBeDefined();
+    // The control beat every real system. If that sentence ever goes missing,
+    // the page is overselling the scoreboard again.
+    expect(sep3?.text).toContain("scores higher than every real system");
+    expect(sep3?.text).toContain("tone-insensitive column");
+    // And the human result must stay attached to it.
+    expect(sep3?.text).toContain("still prefer the v3 package");
   });
 
   it("no longer claims the grammar lifts Gemini measurably, anywhere", () => {
