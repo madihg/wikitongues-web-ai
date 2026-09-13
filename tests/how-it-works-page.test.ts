@@ -90,7 +90,7 @@ describe("how-it-works page content", () => {
     ).toHaveLength(4);
     expect(howItWorks.benchmark.explainer).toHaveLength(5);
     expect(howItWorks.testedNow.items).toHaveLength(3);
-    expect(howItWorks.changelog.entries).toHaveLength(9);
+    expect(howItWorks.changelog.entries).toHaveLength(10);
     expect(howItWorks.live.stats).toHaveLength(6);
     for (const e of howItWorks.changelog.entries) {
       // fixed history: a dated label like "Aug 17, 2026"
@@ -113,7 +113,7 @@ describe("how-it-works page content", () => {
     // add a claim (especially about permissions) beyond the app's exact text.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "b11d147d28d105409de9935086146329bd5a09bef33fdc50a4a4103dca529236",
+      "cf782377142c44cf64d6b477ff67692f2c01bfd804d9d3037a1998249cc541f6",
     );
   });
 
