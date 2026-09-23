@@ -20,8 +20,10 @@ const liveStrings = howItWorks.live;
 
 const DOT = 14;
 const GAP = 6;
-const ROW_H = 64;
-const LABEL_W = 150;
+// Label and caption stack above the dots: round labels name the question
+// batch and run long, and a side column clipped them.
+const ROW_H = 78;
+const CHART_W = 360;
 const LEFT_PAD = 8;
 const TOP_PAD = 12;
 
@@ -74,7 +76,7 @@ function DotRows({
   oursIsA: boolean;
 }) {
   const drawn = rounds.filter((r) => r.n > 0);
-  const width = LEFT_PAD + LABEL_W + 10 * (DOT + GAP) + 8;
+  const width = CHART_W;
   const height = TOP_PAD + drawn.length * ROW_H;
   return (
     <svg
@@ -97,7 +99,7 @@ function DotRows({
           <g key={r.key}>
             <text
               x={LEFT_PAD}
-              y={y + DOT + 2}
+              y={y + 14}
               fontSize="13"
               fontWeight="600"
               fill="var(--color-text-primary)"
@@ -106,7 +108,7 @@ function DotRows({
             </text>
             <text
               x={LEFT_PAD}
-              y={y + DOT + 20}
+              y={y + 30}
               fontSize="11"
               fill="var(--color-text-muted)"
             >
@@ -115,8 +117,8 @@ function DotRows({
             {slots.map((s, j) => (
               <circle
                 key={j}
-                cx={LEFT_PAD + LABEL_W + j * (DOT + GAP) + DOT / 2}
-                cy={y + DOT / 2 + 6}
+                cx={LEFT_PAD + j * (DOT + GAP) + DOT / 2}
+                cy={y + 44 + DOT / 2}
                 r={DOT / 2}
                 fill={FILL[s]}
                 stroke={STROKE[s]}
@@ -174,9 +176,9 @@ export function readingFor(
   const plain = oursIsA ? latest.bWins : latest.aWins;
   const decided = ours + plain;
   const values = {
-    latestLabel: latest.label.toLowerCase(),
+    latestLabel: latest.label,
     latestNeitherPerTen: latest.perTen.neither.toFixed(1),
-    firstLabel: first.label.toLowerCase(),
+    firstLabel: first.label,
     firstNeitherPerTen: first.perTen.neither.toFixed(1),
     latestOursOfDecided: fmtInt(ours),
     latestPlainOfDecided: fmtInt(plain),

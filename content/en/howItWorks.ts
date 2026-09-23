@@ -335,7 +335,7 @@ export const howItWorks = {
     noPairYet:
       "No blind round between a plain model and our package has been judged yet.",
     unjudgedNote:
-      "Why not a bar for every version: only the version in the blind test can be judged by speakers, and so far that is the v3 package. Versions 4, 4.1, 4.2 and 4.3 have only sat the exam below, which speakers have not judged. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
+      "Why not a bar for every version: only the version in the blind test can be judged by speakers, and so far that is the v3 package. Versions 4 through 4.4 have only sat the exam below, which speakers have not judged. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
   },
 
   benchmark: {
