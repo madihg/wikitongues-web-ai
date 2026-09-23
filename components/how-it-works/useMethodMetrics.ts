@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { methodMetricsApi } from "@/content/config";
 import type {
+  HumanRoundCounts,
+  HumanRoundsPair,
   MethodCandidate,
   MethodCeiling,
   PublicMethodMetrics,
@@ -80,6 +82,75 @@ function parseCandidate(x: unknown): MethodCandidate | null {
   };
 }
 
+function parseRound(x: unknown): HumanRoundCounts | null {
+  if (!isRecord(x) || !isRecord(x.perTen)) return null;
+  const p = x.perTen;
+  if (
+    typeof x.key !== "string" ||
+    typeof x.label !== "string" ||
+    typeof x.from !== "string" ||
+    !(x.to === null || typeof x.to === "string") ||
+    !num(x.n) ||
+    !num(x.aWins) ||
+    !num(x.bWins) ||
+    !num(x.ties) ||
+    !num(x.bothInadequate) ||
+    !num(p.a) ||
+    !num(p.b) ||
+    !num(p.tie) ||
+    !num(p.neither)
+  ) {
+    return null;
+  }
+  return {
+    key: x.key,
+    label: x.label,
+    from: x.from,
+    to: x.to,
+    n: x.n,
+    aWins: x.aWins,
+    bWins: x.bWins,
+    ties: x.ties,
+    bothInadequate: x.bothInadequate,
+    perTen: { a: p.a, b: p.b, tie: p.tie, neither: p.neither },
+  };
+}
+
+function parseArm(x: unknown): { name: string; approach: string } | null {
+  if (!isRecord(x) || typeof x.name !== "string" || typeof x.approach !== "string")
+    return null;
+  return { name: x.name, approach: x.approach };
+}
+
+/** The human rounds are TOLERANT where the rest of the payload is strict: a
+ * missing field means an older app deploy, and the page should keep serving
+ * every other number rather than go dark. A present-but-malformed pair is
+ * dropped, never rendered. Exported for tests. */
+export function parseHumanRounds(x: unknown): HumanRoundsPair[] {
+  if (!Array.isArray(x)) return [];
+  const out: HumanRoundsPair[] = [];
+  for (const raw of x) {
+    if (!isRecord(raw) || !Array.isArray(raw.rounds)) continue;
+    const a = parseArm(raw.a);
+    const b = parseArm(raw.b);
+    const all = parseRound(raw.all);
+    if (!a || !b || !all) continue;
+    const rounds: HumanRoundCounts[] = [];
+    let bad = false;
+    for (const r of raw.rounds) {
+      const parsed = parseRound(r);
+      if (!parsed) {
+        bad = true;
+        break;
+      }
+      rounds.push(parsed);
+    }
+    if (bad) continue;
+    out.push({ a, b, rounds, all });
+  }
+  return out;
+}
+
 /** Strict parse of the endpoint payload. Exported for tests. */
 export function parseMethodMetrics(
   data: unknown,
@@ -148,6 +219,7 @@ export function parseMethodMetrics(
       poolDecided: poolPreference.poolDecided,
       poolBothInadequateRate: poolPreference.poolBothInadequateRate,
     },
+    humanRounds: parseHumanRounds(data.humanRounds),
     candidates: parsedCandidates,
   };
 }
