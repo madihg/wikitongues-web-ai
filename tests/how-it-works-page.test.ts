@@ -23,12 +23,15 @@ import { liveValues } from "@/components/how-it-works/liveValues";
 import { parseMethodMetrics } from "@/components/how-it-works/useMethodMetrics";
 import type { PublicMethodMetrics } from "@/content/types";
 
+const VERDICT_TOKENS = ["ceilingChrf", "count", "firstLabel", "firstNeitherPerTen", "frozenPrompts", "honestCeilingChrfAll", "latestDecided", "latestLabel", "latestNeitherPerTen", "latestOursOfDecided", "latestPlainOfDecided", "leakFreePrompts", "leakedPrompts", "lexEntries", "n", "noPreferencePct", "ours", "pairwiseComparisons", "plain", "poolBothInadequatePct", "poolComparisons", "shippedCeilingChrfAll"];
+
 const sha256 = (s: string) =>
   createHash("sha256").update(s, "utf8").digest("hex");
 
 function sampleMetrics(): PublicMethodMetrics {
   return {
     computedAt: "2026-08-28T00:00:00.000Z",
+    humanRounds: [],
     corpus: {
       goldAnswers: 10,
       pairwiseComparisons: 20,
@@ -90,7 +93,7 @@ describe("how-it-works page content", () => {
     ).toHaveLength(4);
     expect(howItWorks.benchmark.explainer).toHaveLength(5);
     expect(howItWorks.testedNow.items).toHaveLength(3);
-    expect(howItWorks.changelog.entries).toHaveLength(10);
+    expect(howItWorks.changelog.entries).toHaveLength(11);
     expect(howItWorks.live.stats).toHaveLength(6);
     for (const e of howItWorks.changelog.entries) {
       // fixed history: a dated label like "Aug 17, 2026"
@@ -113,7 +116,7 @@ describe("how-it-works page content", () => {
     // add a claim (especially about permissions) beyond the app's exact text.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "cf782377142c44cf64d6b477ff67692f2c01bfd804d9d3037a1998249cc541f6",
+      "095bd6eec611243cf375e5453543b2bee88d9a9d4638cb6c1f7c8e959adfe966",
     );
   });
 
@@ -255,6 +258,9 @@ describe("how-it-works page content", () => {
       "commitDate",
       "copiedOn",
       "count",
+      // The human-verdict chart fills its own tokens from the humanRounds
+      // payload (HumanVerdicts.tsx: readingFor), not from liveValues.
+      ...VERDICT_TOKENS,
     ]);
     const unknown = [...tokens].filter((t) => !known.has(t));
     expect(unknown).toEqual([]);
@@ -322,5 +328,102 @@ describe("how-it-works page content", () => {
         ).toBe(true);
       }
     }
+  });
+});
+
+// ─── The human verdict chart (added 2026-09-23) ──────────────────────────────
+import { tenSlots } from "@/components/how-it-works/format";
+import { parseHumanRounds } from "@/components/how-it-works/useMethodMetrics";
+import { pickPair, readingFor } from "@/components/how-it-works/HumanVerdicts";
+import type { HumanRoundsPair } from "@/content/types";
+
+function roundFixture(
+  key: string,
+  label: string,
+  c: { a: number; b: number; tie: number; neither: number },
+) {
+  const n = c.a + c.b + c.tie + c.neither;
+  const per = (x: number) => (n === 0 ? 0 : Math.round((100 * x) / n) / 10);
+  return {
+    key,
+    label,
+    from: "2026-08-20T00:00:00.000Z",
+    to: null,
+    n,
+    aWins: c.a,
+    bWins: c.b,
+    ties: c.tie,
+    bothInadequate: c.neither,
+    perTen: { a: per(c.a), b: per(c.b), tie: per(c.tie), neither: per(c.neither) },
+  };
+}
+
+function pairFixture(): HumanRoundsPair {
+  // Plain sorts first by name, so the plain arm is "a" and ours is "b".
+  const r1 = roundFixture("round-1", "Aug 20 to Sep 12", { a: 22, b: 82, tie: 25, neither: 119 });
+  const r2 = roundFixture("round-2", "Since Sep 13", { a: 66, b: 96, tie: 77, neither: 33 });
+  return {
+    a: { name: "Gemini 3.1 Pro", approach: "untouched" },
+    b: { name: "Gemini 3.1 Pro + Igala RAG v3", approach: "retrieval v3" },
+    rounds: [r1, r2],
+    all: roundFixture("all", "All rounds", { a: 88, b: 178, tie: 102, neither: 152 }),
+  };
+}
+
+describe("the human verdict chart", () => {
+  it("has the content shapes the component expects", () => {
+    expect(howItWorks.verdicts.legend).toEqual(
+      expect.objectContaining({ ours: expect.any(String), plain: expect.any(String), tie: expect.any(String), neither: expect.any(String) }),
+    );
+    expect(howItWorks.verdicts.reading.twoRounds).toContain("{latestNeitherPerTen}");
+    expect(howItWorks.verdicts.reading.oneRound).not.toContain("{firstLabel}");
+    for (const s of [howItWorks.verdicts.intro, howItWorks.verdicts.unjudgedNote]) {
+      expect(s).not.toContain("—");
+    }
+  });
+
+  it("tenSlots always sums to 10 for a non-empty round and to 0 for an empty one", () => {
+    expect(tenSlots([96, 66, 77, 33]).reduce((s, x) => s + x, 0)).toBe(10);
+    expect(tenSlots([96, 66, 77, 33])).toEqual([4, 2, 3, 1]);
+    expect(tenSlots([82, 22, 25, 119])).toEqual([3, 1, 1, 5]);
+    expect(tenSlots([0, 0, 0, 0])).toEqual([0, 0, 0, 0]);
+    expect(tenSlots([1, 0, 0, 0])).toEqual([10, 0, 0, 0]);
+    // Largest remainder, deterministic on ties.
+    expect(tenSlots([1, 1, 1])).toEqual([4, 3, 3]);
+  });
+
+  it("parses the rounds tolerantly: absent means [], malformed pairs are dropped", () => {
+    expect(parseHumanRounds(undefined)).toEqual([]);
+    expect(parseHumanRounds("nope")).toEqual([]);
+    const good = pairFixture();
+    const bad = { ...good, all: { ...good.all, perTen: { a: "x" } } };
+    const parsed = parseHumanRounds([bad, good]);
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].b.name).toBe("Gemini 3.1 Pro + Igala RAG v3");
+    // And the strict parser accepts a payload WITHOUT the field (older app).
+    const m = parseMethodMetrics(sampleMetrics());
+    expect(m).not.toBeNull();
+    expect(m!.humanRounds).toEqual([]);
+  });
+
+  it("draws the plain-vs-package pair and reads it in plain words", () => {
+    const picked = pickPair([pairFixture()]);
+    expect(picked).not.toBeNull();
+    expect(picked!.oursIsA).toBe(false);
+    const reading = readingFor(picked!.pair, picked!.oursIsA)!;
+    expect(reading.latest.key).toBe("round-2");
+    expect(reading.text).toContain("1.2 times in ten");
+    expect(reading.text).toContain("against 4.8");
+    // The rounds are different question batches, never a version-to-version
+    // comparison, and the lead is thin: the copy says both.
+    expect(reading.text).toContain("read each row on its own");
+    expect(reading.text).toContain("preferred ours 96 times and the plain model 66 times, out of 162: ahead, not far ahead");
+    expect(reading.text).not.toContain("{");
+  });
+
+  it("never draws a pair of two plain models or two packages", () => {
+    const p = pairFixture();
+    const twoPlain = { ...p, b: { ...p.b, approach: "untouched" } };
+    expect(pickPair([twoPlain])).toBeNull();
   });
 });

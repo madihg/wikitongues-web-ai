@@ -134,6 +134,37 @@ export interface PublicMethodMetrics {
   };
   /** Sorted by leak-free score, best first. */
   candidates: MethodCandidate[];
+  /** Blind pool judgments by pair of arms and by judged round. Absent from
+   * older payloads; the parser defaults it to [] so a site deploy never has
+   * to wait on an app deploy. */
+  humanRounds: HumanRoundsPair[];
+}
+
+export interface HumanRoundPerTen {
+  a: number;
+  b: number;
+  tie: number;
+  neither: number;
+}
+
+export interface HumanRoundCounts {
+  key: string;
+  label: string;
+  from: string;
+  to: string | null;
+  n: number;
+  aWins: number;
+  bWins: number;
+  ties: number;
+  bothInadequate: number;
+  perTen: HumanRoundPerTen;
+}
+
+export interface HumanRoundsPair {
+  a: { name: string; approach: string };
+  b: { name: string; approach: string };
+  rounds: HumanRoundCounts[];
+  all: HumanRoundCounts;
 }
 
 // --- Public stats (live, from the annotation app's aggregate-only API) -------

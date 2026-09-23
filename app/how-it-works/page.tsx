@@ -5,6 +5,7 @@ import { MethodStats } from "@/components/how-it-works/MethodStats";
 import { SystemDiagram } from "@/components/how-it-works/SystemDiagram";
 import { JourneyStages } from "@/components/how-it-works/JourneyStages";
 import { AgreementBoard } from "@/components/how-it-works/AgreementBoard";
+import { HumanVerdicts } from "@/components/how-it-works/HumanVerdicts";
 import { LiveFilledText } from "@/components/how-it-works/LiveFilledText";
 import { PromptBlock } from "@/components/how-it-works/PromptBlock";
 import { fill } from "@/components/how-it-works/format";
@@ -160,6 +161,16 @@ export default function HowItWorksPage() {
           label={hw.prompts.terminalLabel}
           snapshot={igalaTerminalContract}
         />
+      </Section>
+
+      {/* The human verdict, ten questions at a time */}
+      <Section
+        id={hw.verdicts.id}
+        overline={hw.verdicts.overline}
+        title={hw.verdicts.title}
+        width="wide"
+      >
+        <HumanVerdicts />
       </Section>
 
       {/* The benchmark */}

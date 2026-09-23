@@ -308,6 +308,36 @@ export const howItWorks = {
     terminalLabel: "The closing rule",
   },
 
+  verdicts: {
+    id: "verdicts",
+    overline: "The human verdict",
+    title: "Out of every ten questions",
+    intro:
+      "This is the result we trust. Igala speakers read two answers to the same question without knowing which model wrote which, and pick the better one, call it a draw, or reject both. Below is what they decided, ten questions at a time, for the plain model against the same model with our package. Each row is one round of judging; the rounds are split where the questions changed. The same version of our package sits in both rounds, so the change from row to row is the questions and the judges, not the model.",
+    // {ours} and {plain} are model names from the live payload, not tokens
+    // from liveValues, so the content test skips this template.
+    pairCaption: "{ours} against {plain}, judged blind by native speakers.",
+    // {n} is the round's judgment count, filled by the chart itself.
+    roundCaption: "{n} judgments",
+    legend: {
+      ours: "preferred ours",
+      plain: "preferred the plain model",
+      tie: "called it a draw, or left no verdict",
+      neither: "rejected both",
+    },
+    // Filled by the chart from the drawn pair; see readingFor() for the keys.
+    reading: {
+      twoRounds:
+        "On the {latestLabel}, speakers rejected both answers {latestNeitherPerTen} times in ten, against {firstNeitherPerTen} on the {firstLabel}; the questions changed between the rounds, so read each row on its own. When they preferred one answer in the latest round, they preferred ours {latestOursOfDecided} times and the plain model {latestPlainOfDecided} times, out of {latestDecided}: ahead, not far ahead.",
+      oneRound:
+        "So far, speakers rejected both answers {latestNeitherPerTen} times in ten. When they preferred one answer, they preferred ours {latestOursOfDecided} times and the plain model {latestPlainOfDecided} times, out of {latestDecided}.",
+    },
+    noPairYet:
+      "No blind round between a plain model and our package has been judged yet.",
+    unjudgedNote:
+      "Why not a bar for every version: only the version in the blind test can be judged by speakers, and so far that is the v3 package. Versions 4, 4.1, 4.2 and 4.3 have only sat the exam below, which speakers have not judged. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
+  },
+
   benchmark: {
     id: "benchmark",
     overline: "Honest measurement",
@@ -474,6 +504,11 @@ export const howItWorks = {
         date: "Sep 13, 2026",
         text:
           "Names are not translated. Reviewing a live Wikipedia translation on Sep 1, Igala speakers judged the grammar good and found the failures were elsewhere: the model was respelling people, places and schools because Igala has no s, and it dropped a fact it had no Igala word for. The cause was partly ours - a serving check meant to catch invented words was flagging the copied names as illegal letters and asking the model to rewrite them. Serving v4.2 copies names letter for letter and never drops a fact for want of a word. 124 new questions went to the annotators, aimed at what is still open: the direction words the speakers themselves disagreed about, year expressions, borrowed words, and how Igala reads in an encyclopedia.",
+      },
+      {
+        date: "Sep 23, 2026",
+        text:
+          "The speakers' verdict is now on this page, ten questions at a time: for each round of blind judging, how many of every ten questions went to our package, to the plain model, to a draw, or to neither. Two rounds so far, on different question batches, with the same v3 package in both, so the rows show the questions changing, not the model. A chart of how often an answer was left uncorrected was considered and dropped, because speakers can only correct the answer they chose, so the answer that wins more is corrected more. Salem's copy of Ejeba's 2023 paper on Igala concord was read line by line: 178 rules, 43 already in the prompt, 24 in abstract notes, the rest nowhere we served. Version 4.3 adds a grammar block to the question, up to three rules retrieved for the question at hand, carrying the forms the paper gives (du and kó with wa for bring, tinyo and rinyo for throw away, abọ for people only) and what the annotators taught us this month (efẹwọ before a town, lo ti before a destination, dates with the day as a plain number). Version 4.4 keeps the block and amends twelve prompt lines from the same corrections. Versions 4.3 and 4.4 sat the frozen exam the same day; their rows are in the table above, and neither has been judged by speakers yet.",
       },
   ] as ChangelogEntry[],
   },
