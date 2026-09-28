@@ -313,10 +313,13 @@ export const howItWorks = {
     overline: "The human verdict",
     title: "Out of every ten questions",
     intro:
-      "This is the result we trust. Igala speakers read two answers to the same question without knowing which model wrote which, and pick the better one, call it a draw, or reject both. Below is what they decided, ten questions at a time, for the plain model against the same model with our package. Each row is one round of judging; the rounds are split where the questions changed. The same version of our package sits in both rounds, so the change from row to row is the questions and the judges, not the model.",
+      "This is the result we trust. Igala speakers read two answers to the same question without knowing which model wrote which, and pick the better one, call it a draw, or reject both. Below is what they decided, ten questions at a time. Each panel is one pair they compared: our package against the plain model, or two versions of our package head to head. Each row is one round of judging, split where the questions changed; inside a panel the same two versions sit in every row, so the change from row to row is the questions and the judges, not the model.",
     // {ours} and {plain} are model names from the live payload, not tokens
     // from liveValues, so the content test skips this template.
     pairCaption: "{ours} against {plain}, judged blind by native speakers.",
+    // {newer} and {older} are model names from the live payload.
+    versionPairCaption:
+      "{newer} against {older}: two versions of our package, judged blind by native speakers.",
     // {n} is the round's judgment count, filled by the chart itself.
     roundCaption: "{n} judgments",
     legend: {
@@ -325,17 +328,32 @@ export const howItWorks = {
       tie: "called it a draw, or left no verdict",
       neither: "rejected both",
     },
+    // {newer} / {older} are short version names ("v4.4"), filled by the chart.
+    versionLegend: {
+      newer: "preferred {newer}",
+      older: "preferred {older}",
+    },
+    // Computed from the share of decided judgments, never typed by hand.
+    margin: {
+      clearlyAhead: "clearly ahead",
+      ahead: "ahead, not far ahead",
+      level: "level",
+      behind: "behind, not far behind",
+      clearlyBehind: "clearly behind",
+    },
     // Filled by the chart from the drawn pair; see readingFor() for the keys.
     reading: {
       twoRounds:
-        "On the {latestLabel}, speakers rejected both answers {latestNeitherPerTen} times in ten, against {firstNeitherPerTen} on the {firstLabel}; the questions changed between the rounds, so read each row on its own. When they preferred one answer in the latest round, they preferred ours {latestOursOfDecided} times and the plain model {latestPlainOfDecided} times, out of {latestDecided}: ahead, not far ahead.",
+        "On the {latestLabel}, speakers rejected both answers {latestNeitherPerTen} times in ten, against {firstNeitherPerTen} on the {firstLabel}; the questions changed between the rounds, so read each row on its own. When they preferred one answer in the latest round, they preferred ours {latestOursOfDecided} times and the plain model {latestPlainOfDecided} times, out of {latestDecided}: {margin}.",
       oneRound:
-        "So far, speakers rejected both answers {latestNeitherPerTen} times in ten. When they preferred one answer, they preferred ours {latestOursOfDecided} times and the plain model {latestPlainOfDecided} times, out of {latestDecided}.",
+        "So far, speakers rejected both answers {latestNeitherPerTen} times in ten. When they preferred one answer, they preferred ours {latestOursOfDecided} times and the plain model {latestPlainOfDecided} times, out of {latestDecided}: {margin}.",
+      versions:
+        "In the latest round, when speakers preferred one version, they preferred {newer} {newerWins} times and {older} {olderWins} times, out of {decided}: {newer} is {margin}. They rejected both answers {neitherPerTen} times in ten.",
     },
     noPairYet:
       "No blind round between a plain model and our package has been judged yet.",
     unjudgedNote:
-      "Why not a bar for every version: only the version in the blind test can be judged by speakers, and so far that is the v3 package. Versions 4 through 4.4 have only sat the exam below, which speakers have not judged. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
+      "Why not a bar for every version: speakers can only judge the versions in the blind test. That was the v3 package alone until Sep 28, when version 4.4 joined it; a version gets its own panel here once speakers have judged it. Versions 4 through 4.3 have only sat the exam below. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
   },
 
   benchmark: {
@@ -509,6 +527,11 @@ export const howItWorks = {
         date: "Sep 23, 2026",
         text:
           "The speakers' verdict is now on this page, ten questions at a time: for each round of blind judging, how many of every ten questions went to our package, to the plain model, to a draw, or to neither. Two rounds so far, on different question batches, with the same v3 package in both, so the rows show the questions changing, not the model. A chart of how often an answer was left uncorrected was considered and dropped, because speakers can only correct the answer they chose, so the answer that wins more is corrected more. Salem's copy of Ejeba's 2023 paper on Igala concord was read line by line: 178 rules, 43 already in the prompt, 24 in abstract notes, the rest nowhere we served. Version 4.3 adds a grammar block to the question, up to three rules retrieved for the question at hand, carrying the forms the paper gives (du and kó with wa for bring, tinyo and rinyo for throw away, abọ for people only) and what the annotators taught us this month (efẹwọ before a town, lo ti before a destination, dates with the day as a plain number). Version 4.4 keeps the block and amends twelve prompt lines from the same corrections. Versions 4.3 and 4.4 sat the frozen exam the same day; their rows are in the table above, and neither has been judged by speakers yet.",
+      },
+      {
+        date: "Sep 28, 2026",
+        text:
+          "Version 4.4 joined the blind test: from today speakers judge it against the plain model and against the v3 package, on the questions still in their queues, so the next round measures one version against the next directly. The human verdict above now draws every pair the speakers have judged, and computes its words (ahead, level, behind) from the counts. Two corrections: the scoreboard had labelled versions 4.2 to 4.4 as retrieval v1 since they were registered, and the fill script would have written a pooled 4.x version's answers with the wrong prompt; both are fixed and tested.",
       },
   ] as ChangelogEntry[],
   },

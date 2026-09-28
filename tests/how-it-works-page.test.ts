@@ -23,7 +23,7 @@ import { liveValues } from "@/components/how-it-works/liveValues";
 import { parseMethodMetrics } from "@/components/how-it-works/useMethodMetrics";
 import type { PublicMethodMetrics } from "@/content/types";
 
-const VERDICT_TOKENS = ["ceilingChrf", "count", "firstLabel", "firstNeitherPerTen", "frozenPrompts", "honestCeilingChrfAll", "latestDecided", "latestLabel", "latestNeitherPerTen", "latestOursOfDecided", "latestPlainOfDecided", "leakFreePrompts", "leakedPrompts", "lexEntries", "n", "noPreferencePct", "ours", "pairwiseComparisons", "plain", "poolBothInadequatePct", "poolComparisons", "shippedCeilingChrfAll"];
+const VERDICT_TOKENS = ["decided", "margin", "neitherPerTen", "newer", "newerWins", "older", "olderWins", "ceilingChrf", "count", "firstLabel", "firstNeitherPerTen", "frozenPrompts", "honestCeilingChrfAll", "latestDecided", "latestLabel", "latestNeitherPerTen", "latestOursOfDecided", "latestPlainOfDecided", "leakFreePrompts", "leakedPrompts", "lexEntries", "n", "noPreferencePct", "ours", "pairwiseComparisons", "plain", "poolBothInadequatePct", "poolComparisons", "shippedCeilingChrfAll"];
 
 const sha256 = (s: string) =>
   createHash("sha256").update(s, "utf8").digest("hex");
@@ -93,7 +93,7 @@ describe("how-it-works page content", () => {
     ).toHaveLength(4);
     expect(howItWorks.benchmark.explainer).toHaveLength(5);
     expect(howItWorks.testedNow.items).toHaveLength(3);
-    expect(howItWorks.changelog.entries).toHaveLength(11);
+    expect(howItWorks.changelog.entries).toHaveLength(12);
     expect(howItWorks.live.stats).toHaveLength(6);
     for (const e of howItWorks.changelog.entries) {
       // fixed history: a dated label like "Aug 17, 2026"
@@ -116,7 +116,7 @@ describe("how-it-works page content", () => {
     // add a claim (especially about permissions) beyond the app's exact text.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "095bd6eec611243cf375e5453543b2bee88d9a9d4638cb6c1f7c8e959adfe966",
+      "ba9e83bf009c5bb84fc3dfe808f74b88a79dea1ff96e64572b5c1a3f2fe00c92",
     );
   });
 
@@ -334,7 +334,14 @@ describe("how-it-works page content", () => {
 // ─── The human verdict chart (added 2026-09-23) ──────────────────────────────
 import { tenSlots } from "@/components/how-it-works/format";
 import { parseHumanRounds } from "@/components/how-it-works/useMethodMetrics";
-import { pickPair, readingFor } from "@/components/how-it-works/HumanVerdicts";
+import {
+  marginPhrase,
+  pickPair,
+  pickPairs,
+  readingFor,
+  readingForVersions,
+  versionOf,
+} from "@/components/how-it-works/HumanVerdicts";
 import type { HumanRoundsPair } from "@/content/types";
 
 function roundFixture(
@@ -419,6 +426,62 @@ describe("the human verdict chart", () => {
     expect(reading.text).toContain("read each row on its own");
     expect(reading.text).toContain("preferred ours 96 times and the plain model 66 times, out of 162: ahead, not far ahead");
     expect(reading.text).not.toContain("{");
+  });
+
+  it("draws every judged pair: plain-vs-package first, then versions head to head", () => {
+    const v3Plain = pairFixture();
+    const r2 = (c: { a: number; b: number; tie: number; neither: number }) =>
+      roundFixture("round-2", "new batch of questions, since Sep 13", c);
+    // v4.4 against the plain model: plain sorts first by name, so v4.4 is b.
+    const v44Plain: HumanRoundsPair = {
+      a: { name: "Gemini 3.1 Pro", approach: "untouched" },
+      b: { name: "Gemini 3.1 Pro + Igala RAG v4.4", approach: "retrieval v4.4" },
+      rounds: [roundFixture("round-1", "first batch", { a: 0, b: 0, tie: 0, neither: 0 }), r2({ a: 5, b: 9, tie: 4, neither: 2 })],
+      all: r2({ a: 5, b: 9, tie: 4, neither: 2 }),
+    };
+    // v3 against v4.4, with v3 on side a: the newer version must still be
+    // the accent arm, whatever side the payload put it on.
+    const versions: HumanRoundsPair = {
+      a: { name: "Gemini 3.1 Pro + Igala RAG v3", approach: "retrieval v3" },
+      b: { name: "Gemini 3.1 Pro + Igala RAG v4.4", approach: "retrieval v4.4" },
+      rounds: [r2({ a: 4, b: 7, tie: 3, neither: 1 })],
+      all: r2({ a: 4, b: 7, tie: 3, neither: 1 }),
+    };
+    const unjudged: HumanRoundsPair = {
+      ...v44Plain,
+      b: { name: "Gemini 3.1 Pro + Igala RAG v4.3", approach: "retrieval v4.3" },
+      rounds: [r2({ a: 0, b: 0, tie: 0, neither: 0 })],
+    };
+    const drawn = pickPairs([versions, v3Plain, unjudged, v44Plain]);
+    expect(drawn.map((d) => [d.kind, d.pair.b.name])).toEqual([
+      ["plain", "Gemini 3.1 Pro + Igala RAG v3"],
+      ["plain", "Gemini 3.1 Pro + Igala RAG v4.4"],
+      ["versions", "Gemini 3.1 Pro + Igala RAG v4.4"],
+    ]);
+    expect(drawn[2].firstIsA).toBe(false); // v4.4 is b, and v4.4 leads
+    const reading = readingForVersions(versions, false)!;
+    expect(reading.text).toContain("they preferred v4.4 7 times and v3 4 times, out of 11: v4.4 is ahead, not far ahead");
+    expect(reading.text).toContain("rejected both answers 0.7 times in ten");
+    expect(reading.text).not.toContain("{");
+    // The single-pair helper still returns the busiest plain pair.
+    expect(pickPair([versions, v3Plain])!.pair).toBe(v3Plain);
+  });
+
+  it("reads version numbers only from numbered retrieval labels", () => {
+    expect(versionOf("retrieval v4.4")).toBe(4.4);
+    expect(versionOf("retrieval v3")).toBe(3);
+    expect(versionOf("retrieval v4.1 (no repair)")).toBeNull();
+    expect(versionOf("control (tone removed)")).toBeNull();
+    expect(versionOf("untouched")).toBeNull();
+  });
+
+  it("computes the margin from the counts instead of asserting it", () => {
+    expect(marginPhrase(96, 66)).toBe("ahead, not far ahead"); // 59% of decided
+    expect(marginPhrase(82, 22)).toBe("clearly ahead"); // 79%
+    expect(marginPhrase(50, 50)).toBe("level");
+    expect(marginPhrase(40, 60)).toBe("behind, not far behind");
+    expect(marginPhrase(10, 90)).toBe("clearly behind");
+    expect(marginPhrase(0, 0)).toBe("level");
   });
 
   it("never draws a pair of two plain models or two packages", () => {
