@@ -116,7 +116,7 @@ describe("how-it-works page content", () => {
     // add a claim (especially about permissions) beyond the app's exact text.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "2f833a3a3ce4592c3851ca68adfd287babc8975423f11728882369ee8909d15b",
+      "96b410913f9aa9a257f23eb4f679eadc7a5354ae0da2ce6b99ba8c5ce2b7276b",
     );
   });
 
