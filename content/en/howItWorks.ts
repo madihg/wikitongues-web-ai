@@ -313,7 +313,7 @@ export const howItWorks = {
     overline: "The human verdict",
     title: "Out of every ten questions",
     intro:
-      "This is the result we trust. Igala speakers read two answers to the same question without knowing which model wrote which, and pick the better one, call it a draw, or reject both. Below is what they decided, ten questions at a time. Each panel is one pair they compared: our package against the plain model, or two versions of our package head to head. Each row is one round of judging, split where the questions changed; inside a panel the same two versions sit in every row, so the change from row to row is the questions and the judges, not the model.",
+      "This is the result we trust. Igala speakers read two answers to the same question without knowing which model wrote which, and pick the better one, call it a draw, or reject both. Below is what they decided, ten questions at a time. Each panel is one pair they compared: our package against the plain model, or two versions of our package head to head. Each row is one round of judging, split where the questions or the versions under test changed; inside a panel the same two versions sit in every row, so the change from row to row is the questions and the judges, not the model.",
     // {ours} and {plain} are model names from the live payload, not tokens
     // from liveValues, so the content test skips this template.
     pairCaption: "{ours} against {plain}, judged blind by native speakers.",
@@ -353,7 +353,7 @@ export const howItWorks = {
     noPairYet:
       "No blind round between a plain model and our package has been judged yet.",
     unjudgedNote:
-      "Why not a bar for every version: speakers can only judge the versions in the blind test. That was the v3 package alone until Oct 8, when version 4.4 joined it; a version gets its own panel here once speakers have judged it. Versions 4 through 4.3 have only sat the exam below. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
+      "Why not a bar for every version: speakers can only judge the versions in the blind test. That was the v3 package alone until Oct 8, when version 4.4 joined it, and Oct 10, when version 4.5 joined against version 4.4 and the plain model; a version gets its own panel here once speakers have judged it. Versions 4 through 4.3 have only sat the exam below. Version to version, the exam is the ladder we have; this section is the verdict we trust. We also thought about charting how often each answer was left uncorrected. That would have misled: speakers can only correct the answer they chose, so the answer that wins more gets corrected more (every one of the 180 corrections so far sits on a chosen answer or a draw, none on a loser). A draw also covers the judgments where a speaker recorded no verdict.",
   },
 
   benchmark: {
@@ -450,10 +450,10 @@ export const howItWorks = {
     title: "What is being tested now",
     items: [
       {
-        title: "The blind test so far belongs to one pairing.",
-        live: "Every blind judgment on the strong systems to date, {poolComparisons} of them, compares Gemini with our v3 package against the same Gemini with nothing added. When speakers preferred one answer, they preferred ours about four times in five, and every one of the six annotators leans that way. Counted once per question rather than once per judgment, it is still a clear win. What no speaker has judged yet: v4 and v4.1, the versions that top the exam. That is the next test, and it comes before any further prompt engineering.",
+        title: "The blind test now holds four systems.",
+        live: "Every blind judgment on the strong systems to date, {poolComparisons} of them, is drawn in the panels above. Until Oct 8 that was one pairing: Gemini with our v3 package against the same Gemini with nothing added. Since Oct 8 version 4.4 is judged against both, and since Oct 10 version 4.5 is judged against version 4.4 and the plain model, starting with 108 new questions aimed at what the model still gets wrong.",
         fallback:
-          "Every blind judgment on the strong systems to date compares Gemini with our v3 package against the same Gemini with nothing added. When speakers preferred one answer, they preferred ours about four times in five, and every one of the six annotators leans that way. Counted once per question rather than once per judgment, it is still a clear win. What no speaker has judged yet: v4 and v4.1, the versions that top the exam. That is the next test, and it comes before any further prompt engineering.",
+          "Every blind judgment on the strong systems to date is drawn in the panels above. It began as one pairing: Gemini with our v3 package against the same Gemini with nothing added. Then v4.4 joined against both, and v4.5 joined against v4.4 and the plain model, starting with a new set of questions aimed at what the model still gets wrong.",
       },
       {
         title: "Two grammar questions only speakers can settle.",
@@ -537,6 +537,11 @@ export const howItWorks = {
         date: "Oct 9, 2026",
         text:
           "The speakers' queues had run dry, so 108 new questions went in, built from what the speakers have told us: every judgment, every word they corrected, their own answers, and Salem and Lydia's write-up on Igala grammar. Each question aims at one thing the model still gets wrong (the linker ki, set phrases such as good night, number agreement, money, loan words, one form of each word in an answer), with control questions where the rule must not fire. Version 4.5 sat the frozen exam: 122.7 against 105.3 for version 4.4, but 94.8 against 94.7 once tone marks are set aside, so the gain is that it now leaves tone marks off, as the speakers do; its words are no better than version 4.4's on this exam. It is not in the blind test. On the chat page, a version 4.5 answer can now show a second rendering under it, every word toned and written out in full, as Salem and Lydia asked; that rendering is not stored and not scored.",
+      },
+      {
+        date: "Oct 10, 2026",
+        text:
+          "Version 4.5 joined the blind test: speakers now judge it against version 4.4 and against the plain model, starting with the 108 new questions, in the round the verdict opened on Oct 9. It was meant to join on Oct 9; the job that makes the switch stopped with the machine it ran on, and the switch was made the next morning. The platform where speakers work moved to app.wikitongues.org, and the old address still works. This page is now the only telling of how the project works: the platform's own copy of it redirects here.",
       },
   ] as ChangelogEntry[],
   },
