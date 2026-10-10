@@ -93,7 +93,7 @@ describe("how-it-works page content", () => {
     ).toHaveLength(4);
     expect(howItWorks.benchmark.explainer).toHaveLength(5);
     expect(howItWorks.testedNow.items).toHaveLength(3);
-    expect(howItWorks.changelog.entries).toHaveLength(13);
+    expect(howItWorks.changelog.entries).toHaveLength(14);
     expect(howItWorks.live.stats).toHaveLength(6);
     for (const e of howItWorks.changelog.entries) {
       // fixed history: a dated label like "Aug 17, 2026"
@@ -108,15 +108,16 @@ describe("how-it-works page content", () => {
     expect(serialized).not.toContain("–"); // en dash
   });
 
-  it("keeps the changelog byte-identical to the app's CHANGELOG constant", () => {
-    // The record is shared history with the annotation app's how-it-works
-    // page (web/src/app/how-it-works/page.tsx, const CHANGELOG). This hash
-    // was computed from that constant at copy time. If it breaks, re-copy the
-    // entries verbatim from the app - never paraphrase them here, and never
-    // add a claim (especially about permissions) beyond the app's exact text.
+  it("pins the changelog: history is added to, never quietly rewritten", () => {
+    // This page is the only home of the record since 2026-10-10 (the
+    // annotation app's own how-it-works page, whose CHANGELOG constant this
+    // was copied from until then, now redirects here). The hash covers every
+    // entry's date and text: adding an entry means re-pinning it on purpose,
+    // and an edit to an old entry cannot slip through. Never add a claim
+    // (especially about permissions) the project cannot back.
     const pairs = howItWorks.changelog.entries.map((e) => [e.date, e.text]);
     expect(sha256(JSON.stringify(pairs))).toBe(
-      "96b410913f9aa9a257f23eb4f679eadc7a5354ae0da2ce6b99ba8c5ce2b7276b",
+      "f769f7602d41b3291b3009941f2891dc138d68d08e75ea3f0c76cf822b369d21",
     );
   });
 
