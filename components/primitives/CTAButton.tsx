@@ -2,15 +2,17 @@ import type { ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "link";
 
+// 48px tall, 8px radius, 600 weight (design language, section 5). The label
+// wraps and is never cut.
 const base =
-  "inline-flex min-h-[44px] items-center justify-center gap-2 rounded-md px-5 py-3 text-base font-semibold transition-colors duration-200";
+  "inline-flex min-h-target items-center justify-center gap-2 rounded-control px-5 py-3 text-body font-semibold transition-colors duration-fast ease-wt";
 
 const variants: Record<Variant, string> = {
   primary:
-    "bg-accent text-accent-on hover:bg-accent-hover active:bg-accent-pressed",
+    "bg-accent text-on-accent hover:bg-accent-hover active:bg-accent-pressed",
   secondary:
-    "border border-line-strong text-ink hover:border-accent hover:bg-surface-sunken",
-  link: "px-0 py-0 text-accent underline-offset-4 hover:underline",
+    "border border-line-control bg-surface text-ink hover:bg-sunken",
+  link: "min-h-target-min px-0 py-0 font-medium text-accent underline underline-offset-4",
 };
 
 interface CTAButtonProps {

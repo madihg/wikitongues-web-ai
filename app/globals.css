@@ -77,12 +77,36 @@
 
 @layer components {
   .overline {
-    font-size: 0.75rem;
+    font-size: var(--wt-fs-meta);
     line-height: 1.4;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--wt-ink-2);
+  }
+
+  /* The loop diagram (components/method). A part moves and fades; nothing
+     else is animated, so a low-end phone can run it. Travel takes two beats
+     of the diagram duration, a fade one. */
+  .loop-part {
+    transition:
+      transform calc(var(--wt-dur-slow) * 2) var(--wt-ease),
+      opacity var(--wt-dur-slow) var(--wt-ease);
+  }
+
+  /* With reduced motion asked for, a step appears in its end state at once:
+     no travel, no fade, no stagger. */
+  .loop[data-reduced="true"] .loop-part {
+    transition: none !important;
+  }
+
+  /* Text inside the drawing. 14 units is 12.8px when the drawing is 328px
+     wide (a 360px phone), so no label falls under the 12px floor. */
+  .loop-text {
+    font-family: var(--wt-font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    fill: var(--wt-ink);
   }
 }
 
@@ -97,6 +121,7 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
 }

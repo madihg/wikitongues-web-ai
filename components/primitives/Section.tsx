@@ -10,7 +10,9 @@ const widthClass: Record<Width, string> = {
 
 interface SectionProps {
   id: string;
-  overline?: string;
+  /** Older ids that still appear in links people have shared. Each becomes
+   * an empty anchor at the top of the section, so the old link lands here. */
+  aliases?: string[];
   title?: string;
   intro?: string;
   width?: Width;
@@ -22,7 +24,7 @@ interface SectionProps {
 // scroll-margin so the sticky header never covers the heading on anchor jumps.
 export function Section({
   id,
-  overline,
+  aliases = [],
   title,
   intro,
   width = "standard",
@@ -30,30 +32,31 @@ export function Section({
   children,
 }: SectionProps) {
   const headingId = `${id}-heading`;
+  const scrollMargin = { scrollMarginTop: "calc(var(--wt-header-h) + 16px)" };
   return (
     <section
       id={id}
       aria-labelledby={title ? headingId : undefined}
-      className={tone === "sunken" ? "bg-surface-sunken" : undefined}
-      style={{ scrollMarginTop: "calc(var(--header-h) + 16px)" }}
+      className={tone === "sunken" ? "bg-sunken" : undefined}
+      style={scrollMargin}
     >
+      {aliases.map((alias) => (
+        <span key={alias} id={alias} style={scrollMargin} className="block" />
+      ))}
       <div
-        className={`mx-auto ${widthClass[width]} px-5 py-12 sm:px-6 md:py-16 lg:py-24`}
+        className={`mx-auto ${widthClass[width]} px-4 py-12 sm:px-6 md:py-16 lg:py-24`}
       >
-        {(overline || title || intro) && (
-          <header className="mb-8 max-w-measure md:mb-12">
-            {overline && <p className="overline mb-3">{overline}</p>}
+        {(title || intro) && (
+          <header className="mb-8 max-w-measure md:mb-10">
             {title && (
               <h2
                 id={headingId}
-                className="text-3xl font-semibold leading-tight md:text-4xl"
+                className="text-h2 font-semibold md:text-h1"
               >
                 {title}
               </h2>
             )}
-            {intro && (
-              <p className="mt-4 text-lg leading-relaxed text-muted">{intro}</p>
-            )}
+            {intro && <p className="mt-4 text-title text-ink-2">{intro}</p>}
           </header>
         )}
         {children}

@@ -1,18 +1,8 @@
-import type { FlagMap, Locale } from "./types";
+import type { Locale } from "./types";
 
-// Feature flags. Env vars (NEXT_PUBLIC_FLAG_<NAME>=true|false) override these
-// at build time without a code edit. See lib/flags.ts.
-export const flags: FlagMap = {
-  leaderboard: true, // illustrative snapshot shown, clearly labelled as a sample
-  emailCapture: false, // off for v1 (privacy default; no server route under static export)
-  researchRoute: true, // dedicated /research page with diagrams + live stats
-  howItWorksRoute: true, // dedicated /how-it-works page: the method with live numbers
-  faqRoute: false,
-};
-
-// The public, aggregate-only stats endpoint that powers the Research page's
-// live numbers. It lives in the annotation app (this marketing site is a fully
-// static export and cannot host an API route), so the Research page fetches it
+// The public, aggregate-only stats endpoint that powers the record's count of
+// questions by area. It lives in the annotation app (this marketing site is a fully
+// static export and cannot host an API route), so the page fetches it
 // cross-origin at runtime - numbers refresh without redeploying this site.
 //
 // DEFAULT points at the annotation app's own stable project domain, which keeps
@@ -26,9 +16,8 @@ export const statsApi = {
     "https://web-three-rho-89.vercel.app/api/public/stats",
 };
 
-// The aggregate-only method-metrics endpoint that powers the How-it-works
-// page's live numbers (stat strip, diagram counts, Community Agreement Score
-// board). Same hosting story as statsApi: it lives in the annotation app and
+// The aggregate-only method-metrics endpoint that powers every live figure on
+// the main page and the record (blind comparisons, counts, the exam board). Same hosting story as statsApi: it lives in the annotation app and
 // is fetched cross-origin at runtime. The page NEVER falls back to recorded
 // score values - if this endpoint is unreachable it says "live numbers
 // unavailable" instead, so a stale benchmark can never masquerade as current.
@@ -51,7 +40,4 @@ export const site = {
   contactEmail: "hello@wikitongues.org",
   defaultLocale: "en" as Locale,
   locales: ["en"] as Locale[],
-  // Whether draft (un-signed-off) FAQ answers are shown, marked as drafts.
-  // Set false to withhold all unapproved answers from the build.
-  showDraftFaq: true,
 };

@@ -1,8 +1,5 @@
 export { ui } from "./site";
-export { timeline } from "./timeline";
-export { buckets } from "./buckets";
-export { research } from "./research";
-export { faq } from "./faq";
-export { leaderboard } from "./leaderboard";
-export { researchPage } from "./researchPage";
-export { howItWorks } from "./howItWorks";
+export { home } from "./home";
+export { method } from "./method";
+export { record } from "./record";
+export { reading } from "./reading";

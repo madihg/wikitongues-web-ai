@@ -6,7 +6,8 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipLink } from "@/components/primitives/SkipLink";
-import { getContent, getApprovedFaq } from "@/lib/content";
+import { getContent } from "@/lib/content";
+import { home } from "@/content/en/home";
 import { site } from "@/content/config";
 
 const fraunces = Fraunces({
@@ -27,27 +28,26 @@ const inter = localFont({
   fallback: ["Roboto", "Noto Sans", "system-ui", "sans-serif"],
 });
 
-const description =
-  "Teaching AI to speak the world’s underserved languages, one community at a time. A tutor and the first public benchmark of how well AI models speak Igala - led by the community that speaks it.";
+const description = home.meta.description;
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Wikitongues AI - the Igala pilot",
+    default: home.meta.title,
     template: "%s - Wikitongues AI",
   },
   description,
   openGraph: {
     type: "website",
-    title: "Wikitongues AI - the Igala pilot",
-    description,
+    title: home.meta.ogTitle,
+    description: home.meta.ogDescription,
     url: site.url,
     siteName: "Wikitongues AI",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wikitongues AI - the Igala pilot",
-    description,
+    title: home.meta.ogTitle,
+    description: home.meta.ogDescription,
   },
   alternates: { canonical: site.url },
 };
@@ -57,7 +57,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { ui, faq } = getContent();
+  const { ui } = getContent();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -75,10 +75,12 @@ export default function RootLayout({
       },
       {
         "@type": "FAQPage",
-        mainEntity: getApprovedFaq(faq).map((item) => ({
+        // Answers in their no-figure form: structured data must not carry a
+        // figure that was true only on the day of the build.
+        mainEntity: home.questions.items.map((item) => ({
           "@type": "Question",
           name: item.question,
-          acceptedAnswer: { "@type": "Answer", text: item.answer },
+          acceptedAnswer: { "@type": "Answer", text: item.answer.fallback },
         })),
       },
     ],
