@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Fraunces } from "next/font/google";
+import localFont from "next/font/local";
 import "@/styles/tokens.css";
-import "@/styles/tokens.compat.site.css";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -15,10 +15,16 @@ const fraunces = Fraunces({
   display: "swap",
 });
 
-const inter = Inter({
-  subsets: ["latin", "latin-ext"],
+// Inter is self-hosted as ONE file that holds Latin, Latin Extended, Latin
+// Extended Additional and the combining marks together. Google's CSS splits
+// Inter by unicode-range, so an Igala letter and its tone mark can come from
+// two files and the mark is then not positioned (design language, section 4).
+const inter = localFont({
+  src: "./fonts/InterVariable-wt.woff2",
   variable: "--font-sans",
   display: "swap",
+  weight: "100 900",
+  fallback: ["Roboto", "Noto Sans", "system-ui", "sans-serif"],
 });
 
 const description =

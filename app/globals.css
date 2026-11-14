@@ -5,21 +5,26 @@
 /* Design tokens live in styles/tokens.css (imported in app/layout.tsx,
    before this file). The rulebook is the Wikitongues AI design language, v1. */
 
+/* next/font puts the two families on <html> as --font-sans and --font-serif.
+   The token stacks read them first and fall back to fonts a phone already has. */
+:root {
+  --wt-font-sans:
+    var(--font-sans), Roboto, "Noto Sans", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --wt-font-display:
+    var(--font-serif), "Iowan Old Style", Palatino, Georgia, serif;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-    font-family:
-      var(--font-sans),
-      system-ui,
-      -apple-system,
-      "Segoe UI",
-      Roboto,
-      sans-serif;
+    background-color: var(--wt-paper);
+    color: var(--wt-ink);
+    font-family: var(--wt-font-sans);
+    line-height: var(--wt-lh-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -27,21 +32,41 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif), "Iowan Old Style", Palatino, Georgia, serif;
+    font-family: var(--wt-font-display);
     letter-spacing: -0.015em;
     text-wrap: balance;
   }
 
+  /* Igala is always set in the sans, with room for a tone mark above and a
+     dot below. It is never tracked, clamped or capitalised. */
+  [lang="ig"],
+  .igala {
+    font-family: var(--wt-font-igala);
+    line-height: var(--wt-lh-igala);
+    letter-spacing: 0;
+    font-variant-ligatures: none;
+    overflow-wrap: anywhere;
+  }
+
+  pre,
+  code {
+    font-family: var(--wt-font-mono);
+  }
+
   /* Anchored sections must clear the sticky header. */
   :target {
-    scroll-margin-top: calc(var(--header-h) + 16px);
+    scroll-margin-top: calc(var(--wt-header-h) + 16px);
   }
 
   /* Visible focus for keyboard users everywhere. */
   :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+    outline: var(--wt-focus-width) solid var(--wt-focus);
+    outline-offset: var(--wt-focus-offset);
     border-radius: 2px;
+  }
+
+  .on-inverse :focus-visible {
+    outline-color: var(--wt-focus-on-inverse);
   }
 
   /* Sensible default link color inside prose. */
@@ -57,7 +82,7 @@
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-text-muted);
+    color: var(--wt-ink-2);
   }
 }
 
