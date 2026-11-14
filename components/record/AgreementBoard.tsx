@@ -323,7 +323,7 @@ export function AgreementBoard() {
             </div>
             {rest.length > 0 && (
               <details className="mt-2">
-                <summary className="cursor-pointer text-small font-medium text-accent">
+                <summary className="flex min-h-target-min cursor-pointer items-center text-small font-medium text-accent underline underline-offset-4">
                   {fill(b.chart.showAllLabel, {
                     count: fmtInt(scoreable.length),
                   })}
@@ -369,7 +369,7 @@ export function AgreementBoard() {
       {/* the raw numbers, for readers who want them - live only */}
       {live && values && (
         <details className="mt-6">
-          <summary className="cursor-pointer text-small font-medium text-accent">
+          <summary className="flex min-h-target-min cursor-pointer items-center text-small font-medium text-accent underline underline-offset-4">
             {b.table.summaryLabel}
           </summary>
           <div className="mt-3 overflow-x-auto rounded-card border border-line">

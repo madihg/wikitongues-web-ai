@@ -6,6 +6,7 @@ import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { SkipLink } from "@/components/primitives/SkipLink";
+import { AnchorKeeper } from "@/components/primitives/AnchorKeeper";
 import { getContent } from "@/lib/content";
 import { home } from "@/content/en/home";
 import { site } from "@/content/config";
@@ -96,6 +97,7 @@ export default function RootLayout({
         <Header />
         <main id="main">{children}</main>
         <Footer />
+        <AnchorKeeper />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

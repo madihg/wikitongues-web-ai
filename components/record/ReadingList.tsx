@@ -18,10 +18,12 @@ export function ReadingList() {
               href={entry.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent underline underline-offset-4"
+              className="flex min-h-target-min items-center text-accent underline underline-offset-4"
             >
-              {entry.title}
-              <span className="sr-only"> {record.reading.opensInNewTab}</span>
+              <span>
+                {entry.title}
+                <span className="sr-only"> {record.reading.opensInNewTab}</span>
+              </span>
             </a>
           </h3>
           <p className="mt-1 text-small text-ink-3">{entry.source}</p>
