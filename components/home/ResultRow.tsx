@@ -5,6 +5,7 @@ import { useMethodMetrics } from "@/components/record/useMethodMetrics";
 import { fill, fmtInt, tenSlots } from "@/components/record/format";
 import { liveValues } from "@/components/record/liveValues";
 import { layerVsPlain } from "@/components/record/layerVsPlain";
+import { Mark, type MarkKind } from "@/components/record/Mark";
 
 // The headline result as ten marks a reader can count: out of every ten
 // blind comparisons between the plain model and the language layer, how many
@@ -19,58 +20,12 @@ const r = home.results;
 
 type Kind = "layer" | "plain" | "draw" | "neither";
 
-function Mark({ kind, size = 24 }: { kind: Kind; size?: number }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className="shrink-0"
-    >
-      {kind === "layer" && <circle cx={12} cy={12} r={10} fill="var(--wt-accent)" />}
-      {kind === "plain" && (
-        <circle cx={12} cy={12} r={10} fill="var(--wt-data-neutral)" />
-      )}
-      {kind === "draw" && (
-        <>
-          <circle
-            cx={12}
-            cy={12}
-            r={9}
-            fill="var(--wt-surface)"
-            stroke="var(--wt-line-control)"
-            strokeWidth={2}
-          />
-          <path
-            d="M7 12h10"
-            stroke="var(--wt-ink-3)"
-            strokeWidth={2}
-            strokeLinecap="round"
-          />
-        </>
-      )}
-      {kind === "neither" && (
-        <>
-          <circle
-            cx={12}
-            cy={12}
-            r={9}
-            fill="var(--wt-surface)"
-            stroke="var(--wt-line-control)"
-            strokeWidth={2}
-          />
-          <path
-            d="M8.5 8.5l7 7M15.5 8.5l-7 7"
-            stroke="var(--wt-ink-3)"
-            strokeWidth={2}
-            strokeLinecap="round"
-          />
-        </>
-      )}
-    </svg>
-  );
-}
+const MARK: Record<Kind, MarkKind> = {
+  layer: "first",
+  plain: "second",
+  draw: "draw",
+  neither: "neither",
+};
 
 const ORDER: Kind[] = ["layer", "plain", "draw", "neither"];
 
@@ -108,7 +63,7 @@ export function ResultRow() {
           data-testid="result-row"
         >
           {marks.map((k, i) => (
-            <Mark key={i} kind={k} size={26} />
+            <Mark key={i} kind={MARK[k]} size={26} />
           ))}
         </div>
       ) : (
@@ -122,7 +77,7 @@ export function ResultRow() {
       <ul className="mt-5 grid gap-2 sm:grid-cols-2">
         {ORDER.map((k, i) => (
           <li key={k} className="flex items-start gap-2 text-small text-ink">
-            <Mark kind={k} size={20} />
+            <Mark kind={MARK[k]} size={20} />
             <span>
               {live && (
                 <span className="font-semibold tabular-nums">

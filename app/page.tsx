@@ -48,7 +48,6 @@ export default function HomePage() {
         style={{ scrollMarginTop: "calc(var(--wt-header-h) + 16px)" }}
       >
         <div className="mx-auto max-w-container-wide px-4 pb-12 pt-12 sm:px-6 md:pb-16 md:pt-20 lg:pt-24">
-          <p className="overline mb-4">{hero.label}</p>
           <h1
             id="hero-heading"
             className="max-w-[20ch] text-h1 font-semibold leading-[1.1] md:text-display lg:text-hero"
@@ -106,23 +105,12 @@ export default function HomePage() {
       {/* Results */}
       <Section id={results.id} title={results.title} width="wide" tone="sunken">
         <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">
-          <div className={`${prose} space-y-4`}>
-            <p className="text-ink">{results.lead}</p>
-            <p>
-              <LiveFilledText
-                live={results.reading.live}
-                fallback={results.reading.fallback}
-              />
-            </p>
-            <p>{results.start}</p>
-            <p>
-              <CTAButton href={results.link.href} variant="link">
-                {results.link.label}
-              </CTAButton>
-            </p>
+          <div className="space-y-6">
+            <p className={`${prose} text-ink`}>{results.lead}</p>
+            <ResultRow />
           </div>
           <div className="space-y-6">
-            <ResultRow />
+            <p className={prose}>{results.start}</p>
             <div className="rounded-card border-l-[3px] border-ink bg-surface px-4 py-4 sm:px-6">
               <h3 className={h3}>{results.limits.title}</h3>
               <p className="mt-2 text-body text-ink-2">
@@ -132,6 +120,11 @@ export default function HomePage() {
                 />
               </p>
             </div>
+            <p>
+              <CTAButton href={results.link.href} variant="link">
+                {results.link.label}
+              </CTAButton>
+            </p>
           </div>
         </div>
       </Section>

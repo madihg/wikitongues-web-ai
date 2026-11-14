@@ -54,7 +54,6 @@ export const home = {
   },
 
   hero: {
-    label: "Wikitongues AI",
     title: "Speakers teach AI models their own language.",
     body: [
       "Wikitongues AI is a method and a platform. Speakers of a language write answers in it, judge what AI models write, and correct the mistakes. The corrections are saved, and the models use them the next time they answer.",

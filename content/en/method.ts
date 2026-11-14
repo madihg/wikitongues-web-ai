@@ -43,7 +43,8 @@ export const method = {
     stepThrough: "Step through",
     // {n} and {total} are filled by the component.
     position: "Step {n} of {total}",
-    positionStill: "The whole loop",
+    positionStill: "Eight steps",
+    more: "More on this step",
   },
 
   listHeading: "The eight steps",

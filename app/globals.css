@@ -76,15 +76,6 @@
 }
 
 @layer components {
-  .overline {
-    font-size: var(--wt-fs-meta);
-    line-height: 1.4;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--wt-ink-2);
-  }
-
   /* The loop diagram (components/method). A part moves and fades; nothing
      else is animated, so a low-end phone can run it. Travel takes two beats
      of the diagram duration, a fade one. */

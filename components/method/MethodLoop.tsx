@@ -157,8 +157,10 @@ export function MethodLoop() {
     : c.positionStill;
   const caption = current ? current.caption : method.stillCaption;
 
-  const button =
-    "inline-flex min-h-target min-w-target items-center justify-center gap-2 rounded-control border border-line-control bg-surface px-4 text-body font-semibold text-ink transition-colors duration-fast ease-wt hover:bg-sunken disabled:border-line-control disabled:bg-sunken disabled:text-ink-3";
+  const buttonBase =
+    "inline-flex min-h-target min-w-target items-center justify-center gap-2 rounded-control border px-4 text-body font-semibold transition-colors duration-fast ease-wt";
+  const button = `${buttonBase} border-line-control bg-surface text-ink hover:bg-sunken disabled:bg-sunken disabled:text-ink-3`;
+  const buttonPrimary = `${buttonBase} border-accent bg-accent text-on-accent hover:bg-accent-hover`;
 
   return (
     <div
@@ -178,7 +180,7 @@ export function MethodLoop() {
           <div className="rounded-card border border-line bg-surface p-2 sm:p-4">
             <LoopStage step={step} />
           </div>
-          <figcaption className="mt-4 min-h-[5.5rem]">
+          <figcaption className="mt-4 min-h-[6.75rem]">
             <p className="text-small font-medium text-ink-3">{position}</p>
             <p
               className="mt-1 text-title font-semibold text-ink"
@@ -222,7 +224,7 @@ export function MethodLoop() {
           ) : (
             <button
               type="button"
-              className={`${button} border-accent bg-accent text-on-accent hover:bg-accent-hover`}
+              className={buttonPrimary}
               onClick={togglePlay}
               aria-label={
                 playing ? c.pauseAria : finished ? c.again : c.playAria
@@ -281,7 +283,7 @@ export function MethodLoop() {
               ? { backgroundColor: "var(--wt-accent-tint)" }
               : undefined;
             return (
-              <li key={s.name} style={rowStyle} className="px-3 py-4 sm:px-4">
+              <li key={s.name} style={rowStyle} className="px-3 py-3 sm:px-4 lg:py-4">
                 <button
                   type="button"
                   onClick={() => goTo(n)}
@@ -308,7 +310,18 @@ export function MethodLoop() {
                     </span>
                   </span>
                 </button>
-                <p className="mt-2 pl-10 text-small text-ink-2">{s.note}</p>
+                {/* The note: always open on a wide screen; on a phone it opens
+                    when asked, so the list stays short. Works without
+                    JavaScript. Only one of the two is ever shown or read. */}
+                <p className="mt-2 hidden pl-10 text-small text-ink-2 lg:block">
+                  {s.note}
+                </p>
+                <details className="pl-10 lg:hidden">
+                  <summary className="flex min-h-target-min cursor-pointer list-none items-center text-small font-medium text-accent underline underline-offset-4 [&::-webkit-details-marker]:hidden">
+                    {c.more}
+                  </summary>
+                  <p className="pb-2 text-small text-ink-2">{s.note}</p>
+                </details>
                 <p className="sr-only">{s.screenReader}</p>
               </li>
             );

@@ -1,132 +1,135 @@
 // Post-build smoke test: proves the structured content actually rendered into
 // the exported static HTML. Run after `next build` (see `npm run verify`).
+//
+// The site is two pages and two redirect stubs:
+//   out/index.html               the main page: the explanation
+//   out/record/index.html        the record: the evidence
+//   out/how-it-works/index.html  a stub that forwards old links
+//   out/research/index.html      a stub that forwards old links
 import { readFileSync, existsSync } from "node:fs";
 
-const file = "out/index.html";
-if (!existsSync(file)) {
-  console.error(`[smoke] FAIL: ${file} not found. Did the export build run?`);
-  process.exit(1);
-}
-
-const html = readFileSync(file, "utf8");
-
-// Each entry is content from a data file that must appear in the rendered page.
-const required = [
-  // hero
-  "Teaching AI to speak the world",
-  "Starting with Igala",
-  // timeline (data-driven)
-  "Kickoff with the Igala community",
-  "Public launch in Ghana",
-  "October 4-5, 2026",
-  // evaluation buckets (data-driven)
-  "Orthography",
-  "Dialectal fidelity",
-  "Authenticity vs translationese",
-  // FAQ - lead rights question + visible draft handling
-  "Who owns the data",
-  "The community does",
-  "Draft - pending sign-off",
-  // leaderboard - clearly labelled sample + real model rows
-  "Illustrative sample - not real results",
-  "Claude",
-  "Gemma",
-  // support / donate path
-  "donorsupport.co",
-  // parent linkage
-  "wikitongues.org",
-];
-
-// nav (rendered on every page) must carry the dedicated pages
-required.push("How it works");
-
-const missing = required.filter((needle) => !html.includes(needle));
-
-if (missing.length > 0) {
-  console.error("[smoke] FAIL: expected content missing from out/index.html:");
-  for (const m of missing) console.error(`  - ${JSON.stringify(m)}`);
-  process.exit(1);
-}
-
-if (html.length < 5000) {
-  console.error(
-    `[smoke] FAIL: out/index.html looks too small (${html.length} bytes).`,
-  );
-  process.exit(1);
-}
-
-// The dedicated Research page must also have exported to a static file with its
-// key content (hero, diagram labels, findings, next steps) rendered in.
-const researchFile = "out/research/index.html";
-if (!existsSync(researchFile)) {
-  console.error(
-    `[smoke] FAIL: ${researchFile} not found. Did the /research route export?`,
-  );
-  process.exit(1);
-}
-const researchHtml = readFileSync(researchFile, "utf8");
-const researchRequired = [
-  // hero + why
-  "The whole project, explained",
-  "Frontier AI fails the world",
-  // who (institutions, never individual annotators)
-  "Igala Wikimedians",
-  "New York University",
-  // how - the three diagrams' headings + labels
-  "Inside one annotation episode",
-  "Write your own answer",
-  "The data flywheel",
-  "The method ladder",
-  "The frozen exam",
-  // findings + next
-  "Early findings from the pilot",
-  "A public launch in Ghana",
-];
-const researchMissing = researchRequired.filter(
-  (n) => !researchHtml.includes(n),
-);
-if (researchMissing.length > 0) {
-  console.error(
-    "[smoke] FAIL: expected content missing from out/research/index.html:",
-  );
-  for (const m of researchMissing) console.error(`  - ${JSON.stringify(m)}`);
-  process.exit(1);
-}
-
-// Aggregate-only guarantee: the statically built page must never inline any
-// per-person data fields (it only ever fetches aggregate counts at runtime).
-for (const forbidden of ["annotatorId", "passwordHash"]) {
-  if (researchHtml.includes(forbidden)) {
-    console.error(
-      `[smoke] FAIL: research page unexpectedly contains ${JSON.stringify(forbidden)}`,
-    );
+function read(file) {
+  if (!existsSync(file)) {
+    console.error(`[smoke] FAIL: ${file} not found. Did the export build run?`);
     process.exit(1);
+  }
+  return readFileSync(file, "utf8");
+}
+
+// The static HTML escapes apostrophes; compare on the unescaped text.
+const plain = (html) =>
+  html.replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+
+function check(name, html, required, forbidden = []) {
+  const text = plain(html);
+  const missing = required.filter((needle) => !text.includes(needle));
+  if (missing.length > 0) {
+    console.error(`[smoke] FAIL: expected content missing from ${name}:`);
+    for (const m of missing) console.error(`  - ${JSON.stringify(m)}`);
+    process.exit(1);
+  }
+  for (const f of forbidden) {
+    if (text.includes(f)) {
+      console.error(`[smoke] FAIL: ${name} unexpectedly contains ${JSON.stringify(f)}`);
+      process.exit(1);
+    }
   }
 }
 
-// The How-it-works page: static story + verbatim prompts must be in the
-// export; live numbers are fetched client-side so no score may appear here.
-const hiwFile = "out/how-it-works/index.html";
-if (!existsSync(hiwFile)) {
-  console.error(
-    `[smoke] FAIL: ${hiwFile} not found. Did the /how-it-works route export?`,
-  );
+// ── The main page ───────────────────────────────────────────────────────
+const home = read("out/index.html");
+const homeRequired = [
+  // what it is
+  "Speakers teach AI models their own language.",
+  "Wikitongues AI is a method and a platform.",
+  "about 1.6 million people",
+  // the no-figure result line is what the static file carries
+  "So far they prefer the answer made with their own corrections.",
+  // the problem
+  "Most languages are missing from AI",
+  // the loop: the still and all eight steps are in the HTML as text
+  "How it works",
+  "The whole loop. Press play, or read the steps below.",
+  "A speaker answers a question in Igala, in their own words.",
+  "Two AI models answer the same question.",
+  "The speaker picks the better answer without knowing which model wrote it.",
+  "The speaker corrects the mistakes by hand and says why.",
+  "The correction is saved in the language layer, next to rules that linguists have checked.",
+  "The next question goes to the model with matching pieces from the language layer.",
+  "Every pick is counted. The counts show how well each model writes Igala.",
+  "Speech uses the same loop: record a clip, check it, listen to the model.",
+  'viewBox="0 0 360 400"',
+  // results, with the caveat beside the starting figure
+  "Results",
+  "99 of every 100",
+  "not a before and after",
+  "What this does not show",
+  // corrections
+  "What we got wrong",
+  "Our first score rewarded missing tone marks",
+  "We described a permission we did not have",
+  // who, and ownership
+  "Who does the work",
+  "they are paid for their time",
+  "Who owns the data",
+  // take part
+  "Take part",
+  "You speak a language that AI gets wrong",
+  "donorsupport.co",
+  "hello@wikitongues.org",
+  // questions
+  "Do you retrain the AI models?",
+  // nav and parent
+  "The record",
+  "wikitongues.org",
+  // old home anchors kept as aliases
+  'id="project"',
+  'id="support"',
+  'id="faq"',
+];
+// Retired content must be gone. (Live templates with {tokens} do appear in the
+// file, inside the data React sends to the browser; that no token reaches a
+// reader is proved by tests/home-render.test.tsx.)
+const homeForbidden = [
+  "Illustrative sample",
+  "Gemma",
+  "Two tracks, one principle",
+  "Draft - pending sign-off",
+  "To be annotated",
+  "Public launch in Ghana",
+  "—",
+  "–",
+];
+check("out/index.html", home, homeRequired, homeForbidden);
+if (home.length < 5000) {
+  console.error(`[smoke] FAIL: out/index.html looks too small (${home.length} bytes).`);
   process.exit(1);
 }
-const hiwHtml = readFileSync(hiwFile, "utf8");
-const hiwRequired = [
-  // hero + system diagram
-  "How it works",
-  "The whole system",
-  "The Igala community",
-  "The packed prompt",
-  "leak guard",
-  // journey
-  "v0 - plain models",
-  "v3 - teach it the grammar",
+
+// ── The record ──────────────────────────────────────────────────────────
+// Static story + verbatim prompts must be in the export; live figures are
+// fetched client-side so no score may appear here.
+const record = read("out/record/index.html");
+const recordRequired = [
+  "The record",
+  "On this page",
+  // the nine sections, in order of trust
+  "Every blind comparison",
+  "The exam",
+  "Each version of the language layer",
+  "How one answer is built",
+  "The exact instructions the models receive",
+  "The questions, by area",
+  "Open questions",
+  "Further reading",
+  "What changed, when",
+  // versions run to the current one
+  "v0, plain models",
+  "v4.5, tone marks left off",
+  "The current version is 4.5",
   // assembly
   "The rules (system prompt)",
-  "passes the leak guard",
+  "checked before exam questions",
   // the verbatim prompts + their provenance labels
   "You are a fluent native speaker of Igala",
   "CLOSED-CLASS GRAMMAR",
@@ -134,43 +137,82 @@ const hiwRequired = [
   "generation-prompt-v2.ts",
   "generation-prompt-v3.ts",
   "d1cec50cb417",
-  // benchmark story (prose ships static; scores are live-only)
+  // exam story (prose ships static; scores are live-only)
   "Community Agreement Score",
   "Why a bar could pass 100, what we fixed, and what it revealed.",
-  "Sep 3, 2026",
   "scores higher than every real system",
   "Why it is measured on the leak-free subset, and who wrote the answers.",
-  // open questions + the dated record
+  // open questions
   "Two grammar questions only speakers can settle.",
-  "What changed, when",
+  "Tone marks.",
+  // further reading: real links only
+  "arxiv.org/abs/2402.19167",
+  // the dated log, verbatim
   "Aug 17, 2026",
-  // the Aug 29 entry states documented facts only: GRN's signed agreement,
-  // everything else outreach in progress (see how-it-works-page.test.ts)
   "Aug 29, 2026",
   "Sep 1, 2026",
+  "Sep 3, 2026",
   "mostly built in",
   "Global Recordings Network signed a copyright agreement (Aug 27)",
   "Outreach to other rights holders",
+  // old anchors kept as aliases
+  'id="journey"',
+  'id="further-reading"',
 ];
-const hiwMissing = hiwRequired.filter((n) => !hiwHtml.includes(n));
-if (hiwMissing.length > 0) {
-  console.error(
-    "[smoke] FAIL: expected content missing from out/how-it-works/index.html:",
-  );
-  for (const m of hiwMissing) console.error(`  - ${JSON.stringify(m)}`);
-  process.exit(1);
-}
-// Aggregate-only guarantee, same as the research page.
-for (const forbidden of ["annotatorId", "passwordHash", "@test.com"]) {
-  if (hiwHtml.includes(forbidden)) {
-    console.error(
-      `[smoke] FAIL: how-it-works page unexpectedly contains ${JSON.stringify(forbidden)}`,
-    );
-    process.exit(1);
-  }
-}
+const recordForbidden = [
+  // aggregate-only guarantee
+  "annotatorId",
+  "passwordHash",
+  "@test.com",
+  // stale lines that this change removed
+  "This is the version serving today",
+  "The whole system",
+  "To be annotated",
+];
+check("out/record/index.html", record, recordRequired, recordForbidden);
+
+// ── The redirect stubs ──────────────────────────────────────────────────
+// Each must carry the forwarding script with its anchor map, a noindex tag,
+// and plain links for a browser where the script does not run.
+const stubs = [
+  {
+    file: "out/how-it-works/index.html",
+    required: [
+      "location.replace",
+      '"fallback":"/#how-it-works"',
+      '"changelog":"/record/#changelog"',
+      '"journey":"/record/#versions"',
+      "noindex",
+      "This page has moved",
+      'href="/record/"',
+    ],
+  },
+  {
+    file: "out/research/index.html",
+    required: [
+      "location.replace",
+      '"fallback":"/"',
+      '"findings":"/#results"',
+      '"how":"/#how-it-works"',
+      "noindex",
+      "This page has moved",
+    ],
+  },
+];
+for (const stub of stubs) check(stub.file, read(stub.file), stub.required);
+
+// The main page forwards the two old home sections that moved to the record.
+check("out/index.html (legacy anchors)", home, [
+  '"timeline":"/record/#changelog"',
+  '"research":"/record/#reading"',
+]);
+
+// The sitemap lists the two real pages and neither stub.
+const sitemap = read("out/sitemap.xml");
+check("out/sitemap.xml", sitemap, ["/record/"], ["/how-it-works/", "/research/"]);
 
 console.log(
-  `[smoke] OK: ${required.length} home + ${researchRequired.length} research + ${hiwRequired.length} how-it-works content checks passed ` +
-    `(home ${html.length} bytes, research ${researchHtml.length} bytes, how-it-works ${hiwHtml.length} bytes).`,
+  `[smoke] OK: ${homeRequired.length} main page + ${recordRequired.length} record + ` +
+    `${stubs.reduce((n, s) => n + s.required.length, 0)} stub content checks passed ` +
+    `(main ${home.length} bytes, record ${record.length} bytes).`,
 );

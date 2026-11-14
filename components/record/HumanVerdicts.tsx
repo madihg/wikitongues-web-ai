@@ -4,6 +4,7 @@ import { record } from "@/content/en/record";
 import { useMethodMetrics } from "./useMethodMetrics";
 import { fill, fmtInt, tenSlots } from "./format";
 import type { HumanRoundCounts, HumanRoundsPair } from "@/content/types";
+import { Mark, type MarkKind } from "./Mark";
 
 // The human verdict, ten questions at a time. Native speakers judge two
 // answers to the same question blind; this draws what they decided, per
@@ -20,28 +21,13 @@ import type { HumanRoundCounts, HumanRoundsPair } from "@/content/types";
 const v = record.verdicts;
 const liveStrings = record.live;
 
-const DOT = 14;
-const GAP = 6;
-// Label and caption stack above the dots: round labels name the question
-// batch and run long, and a side column clipped them.
-const ROW_H = 78;
-const CHART_W = 360;
-const LEFT_PAD = 8;
-const TOP_PAD = 12;
-
 type Slot = "ours" | "plain" | "tie" | "neither";
 
-const FILL: Record<Slot, string> = {
-  ours: "var(--color-accent)",
-  plain: "var(--color-border-strong)",
-  tie: "var(--color-surface-sunken)",
-  neither: "var(--color-surface)",
-};
-const STROKE: Record<Slot, string> = {
-  ours: "var(--color-accent)",
-  plain: "var(--color-border-strong)",
-  tie: "var(--color-border-strong)",
-  neither: "var(--color-border-strong)",
+const MARK: Record<Slot, MarkKind> = {
+  ours: "first",
+  plain: "second",
+  tie: "draw",
+  neither: "neither",
 };
 
 /** One panel of the chart. `firstIsA` says which arm gets the accent dots:
@@ -126,60 +112,31 @@ function DotRows({
   oursIsA: boolean;
 }) {
   const drawn = rounds.filter((r) => r.n > 0);
-  const width = CHART_W;
-  const height = TOP_PAD + drawn.length * ROW_H;
   return (
-    <svg
-      viewBox={`0 0 ${width} ${height}`}
-      className="h-auto w-full"
-      style={{ maxWidth: width }}
-      role="img"
-      aria-label={drawn
-        .map((r) => {
-          const ours = oursIsA ? r.aWins : r.bWins;
-          const plain = oursIsA ? r.bWins : r.aWins;
-          return `${r.label}: of ${r.n} judgments, ${ours} for ours, ${plain} for the plain model, ${r.ties} draws, ${r.bothInadequate} rejected both.`;
-        })
-        .join(" ")}
-    >
-      {drawn.map((r, i) => {
-        const y = TOP_PAD + i * ROW_H;
+    <ul className="m-0 list-none space-y-5 p-0">
+      {drawn.map((r) => {
+        const ours = oursIsA ? r.aWins : r.bWins;
+        const plain = oursIsA ? r.bWins : r.aWins;
         const slots = slotsFor(r, oursIsA);
         return (
-          <g key={r.key}>
-            <text
-              x={LEFT_PAD}
-              y={y + 14}
-              fontSize="13"
-              fontWeight="600"
-              fill="var(--color-text-primary)"
-            >
-              {r.label}
-            </text>
-            <text
-              x={LEFT_PAD}
-              y={y + 30}
-              fontSize="11"
-              fill="var(--color-text-muted)"
-            >
+          <li key={r.key}>
+            <p className="text-small font-semibold text-ink">{r.label}</p>
+            <p className="text-meta text-ink-2">
               {fill(v.roundCaption, { n: fmtInt(r.n) })}
-            </text>
-            {slots.map((s, j) => (
-              <circle
-                key={j}
-                cx={LEFT_PAD + j * (DOT + GAP) + DOT / 2}
-                cy={y + 44 + DOT / 2}
-                r={DOT / 2}
-                fill={FILL[s]}
-                stroke={STROKE[s]}
-                strokeWidth={s === "neither" ? 1.5 : 1}
-                strokeDasharray={s === "neither" ? "2 2" : undefined}
-              />
-            ))}
-          </g>
+            </p>
+            <div
+              className="mt-2 flex flex-wrap gap-1.5"
+              role="img"
+              aria-label={`Of ${r.n} judgments, ${ours} for the first, ${plain} for the second, ${r.ties} draws, ${r.bothInadequate} rejected both.`}
+            >
+              {slots.map((s, j) => (
+                <Mark key={j} kind={MARK[s]} size={22} />
+              ))}
+            </div>
+          </li>
         );
       })}
-    </svg>
+    </ul>
   );
 }
 
@@ -191,20 +148,10 @@ function Legend({ first, second }: { first: string; second: string }) {
     ["neither", v.legend.neither],
   ];
   return (
-    <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-sm text-muted">
+    <ul className="m-0 mt-5 flex list-none flex-wrap gap-x-6 gap-y-2 p-0 text-small text-ink-2">
       {items.map(([s, label]) => (
         <li key={s} className="flex items-center gap-2">
-          <svg width={DOT} height={DOT} aria-hidden="true">
-            <circle
-              cx={DOT / 2}
-              cy={DOT / 2}
-              r={DOT / 2 - 1}
-              fill={FILL[s]}
-              stroke={STROKE[s]}
-              strokeWidth={s === "neither" ? 1.5 : 1}
-              strokeDasharray={s === "neither" ? "2 2" : undefined}
-            />
-          </svg>
+          <Mark kind={MARK[s]} size={18} />
           {label}
         </li>
       ))}
@@ -276,15 +223,11 @@ export function HumanVerdicts() {
 
   return (
     <div>
-      <p className="max-w-measure text-lg leading-relaxed text-muted">
-        {v.intro}
-      </p>
-
       {state.status === "loading" && (
-        <p className="mt-6 text-sm text-muted">{liveStrings.loadingLabel}…</p>
+        <p className="text-small text-muted">{liveStrings.loadingLabel}…</p>
       )}
       {state.status === "unavailable" && (
-        <p className="mt-6 text-sm text-muted">{liveStrings.unavailableNote}</p>
+        <p className="text-small text-muted">{liveStrings.unavailableNote}</p>
       )}
       {state.status === "ready" && (
         <VerdictsLive
@@ -293,7 +236,7 @@ export function HumanVerdicts() {
         />
       )}
 
-      <p className="mt-8 max-w-measure text-sm leading-relaxed text-muted">
+      <p className="mt-8 max-w-measure text-small leading-relaxed text-muted">
         {v.unjudgedNote}
       </p>
     </div>
@@ -309,14 +252,14 @@ function VerdictsLive({
 }) {
   const drawn = pickPairs(pairs);
   if (drawn.length === 0) {
-    return <p className="mt-6 text-sm text-muted">{v.noPairYet}</p>;
+    return <p className="mt-6 text-small text-muted">{v.noPairYet}</p>;
   }
   return (
-    <div className="mt-6 space-y-6">
+    <div className="space-y-6">
       {drawn.map((d) => (
         <PairPanel key={`${d.pair.a.name}|${d.pair.b.name}`} drawn={d} />
       ))}
-      <p className="text-xs text-muted">
+      <p className="text-meta text-muted">
         {liveStrings.computedPrefix}{" "}
         {new Date(computedAt).toLocaleString("en-US", {
           dateStyle: "medium",
@@ -350,9 +293,9 @@ function PairPanel({ drawn }: { drawn: DrawnPair }) {
     ? readingFor(pair, firstIsA)
     : readingForVersions(pair, firstIsA);
   return (
-    <div className="rounded-lg border border-line bg-surface p-6">
-      <p className="text-sm text-muted">{caption}</p>
-      <div className="mt-4 overflow-x-auto">
+    <div className="rounded-card border border-line bg-surface p-6">
+      <p className="text-small text-muted">{caption}</p>
+      <div className="mt-4">
         <DotRows rounds={pair.rounds} oursIsA={firstIsA} />
       </div>
       <Legend first={legend.first} second={legend.second} />

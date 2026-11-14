@@ -61,15 +61,15 @@ function BarChart({
             y1={TOP_PAD - 6}
             x2={x(t)}
             y2={height - BOTTOM_PAD}
-            stroke="var(--color-border)"
+            stroke="var(--wt-line)"
             strokeWidth="1"
           />
           <text
             x={x(t)}
             y={height - 8}
-            fontSize="10"
+            fontSize="12"
             textAnchor="middle"
-            fill="var(--color-text-muted)"
+            fill="var(--wt-ink-2)"
           >
             {t}
           </text>
@@ -84,27 +84,27 @@ function BarChart({
             y1={TOP_PAD - 6}
             x2={x(100)}
             y2={height - BOTTOM_PAD}
-            stroke="var(--color-accent)"
+            stroke="var(--wt-accent)"
             strokeWidth="1.5"
             strokeDasharray="4 3"
           />
           <text
             x={x(100)}
             y={TOP_PAD - 14}
-            fontSize="10"
+            fontSize="12"
             fontWeight="600"
             textAnchor="middle"
-            fill="var(--color-accent)"
+            fill="var(--wt-accent)"
           >
             {b.chart.referenceLineLabel}
           </text>
           <text
             x={x(100)}
             y={height - 8}
-            fontSize="10"
+            fontSize="12"
             fontWeight="600"
             textAnchor="middle"
-            fill="var(--color-accent)"
+            fill="var(--wt-accent)"
           >
             100
           </text>
@@ -125,7 +125,7 @@ function BarChart({
           x(hasWhisker ? Math.max(score, c.agreementCiHigh as number) : score) +
           8;
         const chip = c.approach;
-        const chipW = chip.length * 5.4 + 14;
+        const chipW = chip.length * 7.3 + 14;
         return (
           <g key={c.name}>
             <text
@@ -133,7 +133,7 @@ function BarChart({
               y={midY - 3}
               fontSize="12"
               fontWeight={isBest ? 700 : 400}
-              fill="var(--color-text-primary)"
+              fill="var(--wt-ink)"
             >
               {truncate(c.name)}
             </text>
@@ -145,20 +145,20 @@ function BarChart({
               rx={7}
               fill={
                 isBest
-                  ? "var(--color-accent-subtle)"
-                  : "var(--color-surface-sunken)"
+                  ? "var(--wt-accent-tint)"
+                  : "var(--wt-sunken)"
               }
               stroke={
-                isBest ? "var(--color-accent)" : "var(--color-border)"
+                isBest ? "var(--wt-accent)" : "var(--wt-line)"
               }
             />
             <text
               x={chipW / 2}
               y={midY + 12}
-              fontSize="9"
+              fontSize="12"
               textAnchor="middle"
               fill={
-                isBest ? "var(--color-accent)" : "var(--color-text-muted)"
+                isBest ? "var(--wt-accent)" : "var(--wt-ink-2)"
               }
             >
               {chip}
@@ -166,8 +166,8 @@ function BarChart({
             <text
               x={chipW + 8}
               y={midY + 12}
-              fontSize="9"
-              fill="var(--color-text-muted)"
+              fontSize="12"
+              fill="var(--wt-ink-2)"
             >
               n={c.nClean}
             </text>
@@ -179,12 +179,12 @@ function BarChart({
               height={BAR_H}
               rx={3}
               fill={
-                isBest ? "var(--color-accent)" : "var(--color-border-strong)"
+                isBest ? "var(--wt-data-highlight)" : "var(--wt-data-neutral)"
               }
             />
 
             {hasWhisker && (
-              <g stroke="var(--color-text-primary)" strokeWidth="1.25">
+              <g stroke="var(--wt-ink)" strokeWidth="1.25">
                 <line
                   x1={x(c.agreementCiLow as number)}
                   y1={midY}
@@ -209,10 +209,10 @@ function BarChart({
             <text
               x={scoreX}
               y={midY + 4}
-              fontSize="11"
+              fontSize="12"
               fontWeight={isBest ? 700 : 400}
               style={{ fontFamily: MONO }}
-              fill="var(--color-text-primary)"
+              fill="var(--wt-ink)"
             >
               {score.toFixed(1)}
               {c.agreementUnderpowered ? "*" : ""}
@@ -237,7 +237,7 @@ function CeilingRow({
     <tr className="border-b border-line bg-accent-subtle">
       <td className="px-3 py-2">
         <div className="font-medium text-ink">{label}</div>
-        <div className="text-xs text-muted">{note}</div>
+        <div className="text-meta text-muted">{note}</div>
       </td>
       <td className="px-3 py-2 text-muted">{b.table.ceilingApproach}</td>
       <td
@@ -297,33 +297,33 @@ export function AgreementBoard() {
       {/* the chart, in one of its three honest states */}
       <div className="mt-8">
         {state.status === "loading" && (
-          <div className="rounded-lg border border-line bg-surface p-5">
+          <div className="rounded-card border border-line bg-surface p-5">
             <div className="animate-pulse space-y-3" aria-hidden="true">
               <div className="h-4 w-3/4 rounded bg-surface-sunken" />
               <div className="h-4 w-1/2 rounded bg-surface-sunken" />
               <div className="h-4 w-2/3 rounded bg-surface-sunken" />
             </div>
-            <p className="mt-4 text-sm text-muted">{b.chart.loadingNote}</p>
+            <p className="mt-4 text-small text-muted">{b.chart.loadingNote}</p>
           </div>
         )}
         {state.status === "unavailable" && (
-          <div className="rounded-lg border border-line bg-surface p-5 text-sm leading-relaxed text-muted">
+          <div className="rounded-card border border-line bg-surface p-5 text-small leading-relaxed text-muted">
             {liveStrings.unavailableNote}
           </div>
         )}
         {live && !drawable && (
-          <div className="rounded-lg border border-line bg-surface p-5 text-sm leading-relaxed text-muted">
+          <div className="rounded-card border border-line bg-surface p-5 text-small leading-relaxed text-muted">
             {b.chart.emptyNote}
           </div>
         )}
         {live && drawable && values && (
-          <div className="rounded-lg border border-line bg-surface p-5">
+          <div className="rounded-card border border-line bg-surface p-5">
             <div className="overflow-x-auto">
               <BarChart rows={top} scaleMax={scaleMax} bestName={bestName} />
             </div>
             {rest.length > 0 && (
               <details className="mt-2">
-                <summary className="cursor-pointer text-sm font-medium text-accent">
+                <summary className="cursor-pointer text-small font-medium text-accent">
                   {fill(b.chart.showAllLabel, {
                     count: fmtInt(scoreable.length),
                   })}
@@ -337,7 +337,7 @@ export function AgreementBoard() {
                 </div>
               </details>
             )}
-            <p className="mt-3 text-xs leading-relaxed text-muted">
+            <p className="mt-3 text-meta leading-relaxed text-muted">
               {fill(b.chart.footnote, values)}
               {anyUnderpowered ? ` ${b.chart.underpoweredMark}` : ""}
             </p>
@@ -346,7 +346,7 @@ export function AgreementBoard() {
       </div>
 
       {/* the plain-words explainer - always present, numbers only when live */}
-      <div className="mt-8 max-w-measure space-y-4 rounded-lg border border-line bg-surface p-6">
+      <div className="mt-8 max-w-measure space-y-4 rounded-card border border-line bg-surface p-6">
         {b.explainer.map((block, i) => {
           const isFluencyBlock = i === b.explainer.length - 1;
           const body = values ? fill(block.live, values) : block.fallback;
@@ -357,7 +357,7 @@ export function AgreementBoard() {
                 : ` ${b.poolSentence.zero}`
               : "";
           return (
-            <p key={block.title} className="text-sm leading-relaxed text-muted">
+            <p key={block.title} className="text-small leading-relaxed text-muted">
               <strong className="font-semibold text-ink">{block.title}</strong>{" "}
               {body}
               {poolTail}
@@ -369,13 +369,13 @@ export function AgreementBoard() {
       {/* the raw numbers, for readers who want them - live only */}
       {live && values && (
         <details className="mt-6">
-          <summary className="cursor-pointer text-sm font-medium text-accent">
+          <summary className="cursor-pointer text-small font-medium text-accent">
             {b.table.summaryLabel}
           </summary>
-          <div className="mt-3 overflow-x-auto rounded-lg border border-line">
-            <table className="w-full min-w-[640px] border-collapse bg-surface text-sm">
+          <div className="mt-3 overflow-x-auto rounded-card border border-line">
+            <table className="w-full min-w-[640px] border-collapse bg-surface text-small">
               <thead>
-                <tr className="border-b border-line-strong bg-surface-sunken text-left text-xs uppercase tracking-overline text-muted">
+                <tr className="border-b border-line-strong bg-surface-sunken text-left text-meta uppercase tracking-overline text-muted">
                   <th className="px-3 py-2 font-medium">
                     {b.table.headers.candidate}
                   </th>
@@ -434,7 +434,7 @@ export function AgreementBoard() {
               </tbody>
             </table>
           </div>
-          <div className="mt-3 max-w-measure space-y-3 rounded-lg border border-line bg-surface p-4 text-sm leading-relaxed text-muted">
+          <div className="mt-3 max-w-measure space-y-3 rounded-card border border-line bg-surface p-4 text-small leading-relaxed text-muted">
             <p>{b.table.note1}</p>
             <p>{fill(b.table.note2.live, values)}</p>
           </div>

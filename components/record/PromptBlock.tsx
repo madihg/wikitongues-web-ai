@@ -25,14 +25,14 @@ export function PromptBlock({
     copiedOn: promptsCopiedOn,
   });
   return (
-    <details className="group mt-6 rounded-lg border border-line bg-surface">
+    <details className="group mt-6 rounded-card border border-line bg-surface">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-5 [&::-webkit-details-marker]:hidden">
         <span className="min-w-0">
-          <span className="overline block">{label}</span>
-          <span className="mt-1 block break-words font-mono text-xs leading-relaxed text-muted">
+          <span className="block text-body font-semibold text-ink">{label}</span>
+          <span className="mt-1 block break-words font-mono text-meta leading-relaxed text-muted">
             {sourceLine}
           </span>
-          <span className="mt-1 block text-xs text-accent group-open:hidden">
+          <span className="mt-1 block text-meta text-accent group-open:hidden">
             {record.prompts.expandHint}
           </span>
         </span>
@@ -54,7 +54,7 @@ export function PromptBlock({
         </svg>
       </summary>
       <div className="overflow-x-auto border-t border-line bg-surface-sunken p-5">
-        <pre className="whitespace-pre-wrap font-mono text-xs leading-relaxed text-ink">
+        <pre className="whitespace-pre-wrap font-mono text-meta leading-relaxed text-ink">
           {snapshot.text}
         </pre>
       </div>
