@@ -24,31 +24,27 @@ npm run verify       # typecheck + unit tests + static build + post-build smoke 
 ```
 
 - `npm run typecheck` - TypeScript, no emit
-- `npm run test` - vitest content-integrity tests (8 buckets, timeline parses, no draft FAQ leaks into structured data, leaderboard labelled as sample)
+- `npm run test` - vitest: the copy rules (caption length, sentence length, no dashes, one name for the system), the eight steps of the loop, the loop under autoplay, keyboard and reduced motion, both pages with the figures feed up and down, every old anchor, the pinned changelog and prompt hashes
 - `npm run build` - static export to `./out`
-- `npm run smoke` - asserts the real content rendered into `out/index.html`
+- `npm run smoke` - asserts the real content rendered into `out/index.html`, `out/record/index.html` and the two redirect stubs
 
 ## Editing content (no code changes needed)
 
 All project facts live as typed data under `content/en/`. Edit one file and the rendered section updates:
 
-| File                        | What it controls                                       |
-| --------------------------- | ------------------------------------------------------ |
-| `content/en/timeline.ts`    | The milestone timeline                                 |
-| `content/en/buckets.ts`     | The eight evaluation dimensions                        |
-| `content/en/research.ts`    | Annotated research entries, grouped by theme           |
-| `content/en/faq.ts`         | FAQ items + per-answer sign-off status                 |
-| `content/en/leaderboard.ts` | Leaderboard snapshot (illustrative until real results) |
-| `content/en/site.ts`        | Hero copy, nav labels, section titles, footer          |
-| `content/config.ts`         | Feature flags, donate URL, site URL, draft-FAQ toggle  |
+| File                       | What it controls                                                    |
+| -------------------------- | ------------------------------------------------------------------- |
+| `content/en/home.ts`       | The main page: hero, problem, results, corrections, who, take part, questions |
+| `content/en/method.ts`     | The loop: the eight steps, their captions, notes and screen-reader text |
+| `content/en/record.ts`     | The record: comparisons, exam, versions, instructions, open questions, the dated log |
+| `content/en/reading.ts`    | Further reading (entries with a checked link only)                  |
+| `content/en/site.ts`       | Nav labels, footer                                                  |
+| `content/config.ts`        | Donate URL, site URL, the two live-figure endpoints                 |
+| `lib/legacy.ts`            | Where each old link goes now                                        |
 
-### FAQ sign-off
+### Live figures
 
-Each FAQ answer has `signOffStatus: 'draft' | 'approved'`. Draft answers are shown with a visible "Draft - pending sign-off" badge (set `site.showDraftFaq = false` in `content/config.ts` to withhold them entirely). Only `approved` answers ever appear in the FAQ structured data / search results. Flip the language-rights answer to `approved` once Daniel and the community sign off on the wording.
-
-### Leaderboard
-
-The leaderboard is feature-flagged (`flags.leaderboard`) and currently shows an **illustrative sample, clearly labelled "not real results."** Replace `content/en/leaderboard.ts` rows and set `kind: 'live'` once the first real Igala benchmark exists (launching October 2026).
+A sentence that carries a figure has two forms: `live`, with `{tokens}` filled from the platform's public endpoint when the page is read, and `fallback`, with no figure in it. No recorded figure is typed into a content file. The changelog in `record.ts` is fixed history and is pinned by a hash in the tests: add to it, never rewrite it.
 
 ## i18n
 
@@ -56,4 +52,4 @@ v1 is English-only but structured for translation: all strings live under `conte
 
 ## Accessibility & performance
 
-WCAG 2.1 AA: semantic landmarks, single `<h1>`, keyboard-operable nav and FAQ (native `<details>`), visible focus rings, `prefers-reduced-motion` honored, color is never the only signal (timeline markers, leaderboard cells). Near-zero client JS; self-hosted fonts via `next/font`.
+WCAG 2.1 AA: semantic landmarks, single `<h1>`, keyboard-operable nav and FAQ (native `<details>`), visible focus rings, `prefers-reduced-motion` honored, color is never the only signal (mistakes, picks and draws differ by shape). Nothing under 12px, targets 44px or more. The loop diagram works by keyboard, without motion and without JavaScript. Self-hosted fonts via `next/font`.

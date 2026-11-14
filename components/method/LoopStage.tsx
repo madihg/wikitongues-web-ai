@@ -223,6 +223,7 @@ export function LoopStage({ step }: { step: number }) {
   const s = step;
   const blind = s === 3 || s === 4 || s === 6 || s === 7;
   const blindDelay = s === 6 ? 1100 : 0;
+  const speech = s === 8;
 
   // Where each moving part is, by step.
   // The question sits on the table from the still to the end of the first pass.
@@ -248,7 +249,6 @@ export function LoopStage({ step }: { step: number }) {
   const kept = s >= 5;
   const secondPass = s === 6 || s === 7;
   const q2 = s === 6 || s === 7;
-  const speech = s === 8;
 
   return (
     <svg
@@ -334,23 +334,26 @@ export function LoopStage({ step }: { step: number }) {
 
       {/* The table: three empty slots where cards land */}
       {[
-        { x: 20, y: 84, w: 100, h: 70, r: 8 },
-        { x: 240, y: 84, w: 100, h: 70, r: 8 },
-        { x: 158, y: 85, w: 44, h: 30, r: 6 },
-        { x: 24, y: 176, w: 76, h: 48, r: 8 },
+        { x: 20, y: 84, w: 100, h: 70, r: 8, show: true },
+        { x: 240, y: 84, w: 100, h: 70, r: 8, show: true },
+        { x: 158, y: 85, w: 44, h: 30, r: 6, show: true },
+        // where the speaker's own answer lands; in the speech step a second
+        // speaker stands here instead
+        { x: 24, y: 176, w: 76, h: 48, r: 8, show: !speech },
       ].map((b) => (
-        <rect
-          key={`${b.x}-${b.y}`}
-          x={b.x}
-          y={b.y}
-          width={b.w}
-          height={b.h}
-          rx={b.r}
-          fill="none"
-          stroke="var(--wt-line-control)"
-          strokeWidth={1}
-          strokeDasharray="4 4"
-        />
+        <Part key={`${b.x}-${b.y}`} opacity={b.show ? 1 : 0}>
+          <rect
+            x={b.x}
+            y={b.y}
+            width={b.w}
+            height={b.h}
+            rx={b.r}
+            fill="none"
+            stroke="var(--wt-line-control)"
+            strokeWidth={1}
+            strokeDasharray="4 4"
+          />
+        </Part>
       ))}
 
       {/* Speaker */}
@@ -669,10 +672,10 @@ export function LoopStage({ step }: { step: number }) {
       </Part>
 
       <Part opacity={speech ? 1 : 0} delay={speech ? 800 : 0}>
-        <g transform="translate(112 196)">
+        <g transform="translate(62 196)">
           <Person fill="var(--wt-ink-2)" />
         </g>
-        <text x={112} y={236} textAnchor="middle" className="loop-text">
+        <text x={62} y={236} textAnchor="middle" className="loop-text">
           {L.check}
         </text>
       </Part>

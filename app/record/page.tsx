@@ -63,7 +63,7 @@ export default function RecordPage() {
           >
             {hw.hero.title}
           </h1>
-          <p className="mt-6 text-title text-ink">{hw.hero.intro}</p>
+          <p className="mt-6 text-title leading-snug text-ink">{hw.hero.intro}</p>
           <p className="mt-4 text-body text-ink-2 md:text-igala">
             {hw.hero.intro2}
           </p>
