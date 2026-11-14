@@ -158,7 +158,7 @@ export function MethodLoop() {
   const caption = current ? current.caption : method.stillCaption;
 
   const buttonBase =
-    "inline-flex min-h-target min-w-target items-center justify-center gap-2 rounded-control border px-4 text-body font-semibold transition-colors duration-fast ease-wt";
+    "inline-flex min-h-target min-w-target items-center justify-center gap-2 whitespace-nowrap rounded-control border px-3 text-body font-semibold transition-colors duration-fast ease-wt";
   const button = `${buttonBase} border-line-control bg-surface text-ink hover:bg-sunken disabled:bg-sunken disabled:text-ink-3`;
   const buttonPrimary = `${buttonBase} border-accent bg-accent text-on-accent hover:bg-accent-hover`;
 
@@ -196,7 +196,7 @@ export function MethodLoop() {
           </figcaption>
         </figure>
 
-        <div className="mt-4 flex flex-wrap items-center gap-2">
+        <div className="mt-4 flex flex-wrap items-center gap-2 lg:flex-nowrap">
           <button
             type="button"
             className={button}
