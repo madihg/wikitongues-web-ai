@@ -1,0 +1,45 @@
+/* Site compat: today's values, pinned (2026-11-13).
+ *
+ * Import after tokens.css. With this file in place the site renders exactly
+ * as it did before the token PR. Each rollout step deletes the block it
+ * names and nothing else. When the file is empty, delete it.
+ */
+
+:root {
+  /* [site step 2: type] next/font sets --font-sans and --font-serif on
+     <html>; the site keeps reading those until the Inter file changes. */
+  --wt-font-sans:
+    var(--font-sans), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --wt-font-display:
+    var(--font-serif), "Iowan Old Style", Palatino, Georgia, serif;
+
+  /* [site step 3: colour] The grey paper and ink become the warm ones. */
+  --wt-paper: #fafaf8;
+  --wt-sunken: #f2f2ef;
+  --wt-ink: #1a1a1a;
+  --wt-ink-2: #595959;
+  --wt-line: #e2e2de;
+  --wt-line-control: #c7c7c1;
+  --wt-inverse: #222222;
+  --wt-ink-on-inverse: #f2f2ef;
+  --wt-ink-on-inverse-2: #b7b7b2;
+  --wt-danger: #b42318;
+
+  /* [site step 4: data] The teal sequential scale. */
+  --viz-1: #0a4f4f;
+  --viz-2: #0f6e6e;
+  --viz-3: #3e9494;
+  --viz-4: #7cbaba;
+  --viz-5: #b9dbdb;
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --wt-header-h: 64px;
+
+  /* [site step 3: colour] Goes with the neutrals block above, in the same PR. Deleting it turns the accent violet. This block is the teal the site has today. */
+  --wt-accent: #0c6b6b;
+  --wt-accent-hover: #0a5f5f;
+  --wt-accent-pressed: #084f4f;
+  --wt-accent-tint: #e6f0f0;
+  --wt-accent-text: #0c6b6b;
+  --wt-on-accent: #ffffff;
+}
