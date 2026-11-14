@@ -231,7 +231,7 @@ export const record = {
     id: "verdicts",
     title: "Every blind comparison",
     intro:
-      "Each panel below is one pair of systems that speakers compared without knowing which was which. The plain model is the model on its own, with no language layer. The feed calls a version of the language layer \"Igala RAG\" followed by its number, and calls it \"ours\". Each row in a panel is one round of judging, shown as ten dots. The questions change from round to round, so read each row on its own.",
+      "Each panel below is one pair of systems that speakers compared without knowing which was which. The plain model is the model on its own, with no language layer. In the panels, a version of the language layer is named \"Igala RAG\" followed by its number, and \"ours\" means the answer made with it. Each row in a panel is one round of judging, shown as ten dots. The questions change from round to round, so read each row on its own.",
     // {ours} and {plain} are model names from the live payload, not tokens
     // from liveValues, so the content test skips this template.
     pairCaption: "{ours} against {plain}, judged blind by native speakers.",
