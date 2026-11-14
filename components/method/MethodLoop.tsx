@@ -164,7 +164,7 @@ export function MethodLoop() {
 
   return (
     <div
-      className="loop grid gap-8 lg:grid-cols-[minmax(0,35rem)_minmax(0,1fr)] lg:gap-12"
+      className="loop grid gap-8 lg:grid-cols-[minmax(0,30rem)_minmax(0,1fr)] lg:gap-12"
       data-step={step}
       data-reduced={reduced ? "true" : "false"}
       data-playing={playing ? "true" : "false"}

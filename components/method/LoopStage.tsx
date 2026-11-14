@@ -3,6 +3,9 @@ import { method } from "@/content/en/method";
 
 // The drawing of the loop. One SVG, 360 by 400, the same at every width.
 //
+// The question (the card with a question mark) sits on the table between
+// the two models. The speaker's own answer lands to the speaker's left.
+//
 // Five places never move: the two models (top), the table between them, the
 // speaker (middle), the picks, and the language layer (bottom). Every other
 // part is a card or a mark whose position and visibility depend only on the
@@ -222,7 +225,8 @@ export function LoopStage({ step }: { step: number }) {
   const blindDelay = s === 6 ? 1100 : 0;
 
   // Where each moving part is, by step.
-  const q1 = s >= 1 && s <= 5;
+  // The question sits on the table from the still to the end of the first pass.
+  const q1 = s <= 5;
   const own =
     s === 0
       ? { t: place(SPEAKER.x, SPEAKER.y, 0.4), o: 0 }
@@ -333,9 +337,10 @@ export function LoopStage({ step }: { step: number }) {
         { x: 20, y: 84, w: 100, h: 70, r: 8 },
         { x: 240, y: 84, w: 100, h: 70, r: 8 },
         { x: 158, y: 85, w: 44, h: 30, r: 6 },
+        { x: 24, y: 176, w: 76, h: 48, r: 8 },
       ].map((b) => (
         <rect
-          key={`${b.x}`}
+          key={`${b.x}-${b.y}`}
           x={b.x}
           y={b.y}
           width={b.w}
@@ -410,19 +415,18 @@ export function LoopStage({ step }: { step: number }) {
           strokeWidth={1.5}
           markerEnd="url(#loop-arrow)"
         >
-          <path d="M180 172V120" />
           <path d="M38 54V80" />
           <path d="M322 54V80" />
-          <path d="M70 158V248" />
+          <path d="M112 158V248" />
           <path d="M340 300H348V32H344" />
           <path d="M290 158V176" />
         </g>
-        <Badge n={1} x={180} y={146} />
+        <Badge n={1} x={62} y={200} />
         <Badge n={2} x={38} y={67} />
         <Badge n={2} x={322} y={67} />
         <Badge n={3} x={104} y={100} />
         <Badge n={4} x={104} y={138} />
-        <Badge n={5} x={70} y={204} />
+        <Badge n={5} x={112} y={204} />
         <Badge n={6} x={348} y={150} />
         <Badge n={7} x={290} y={167} />
         <Badge n={8} x={212} y={190} />
@@ -440,11 +444,7 @@ export function LoopStage({ step }: { step: number }) {
 
       {/* The question */}
       <Part
-        transform={
-          s === 0
-            ? place(SPEAKER.x, SPEAKER.y, 0.6)
-            : place(Q_HOME.x, Q_HOME.y)
-        }
+        transform={place(Q_HOME.x, Q_HOME.y)}
         opacity={q1 ? 1 : 0}
       >
         <QuestionCard />
@@ -580,9 +580,7 @@ export function LoopStage({ step }: { step: number }) {
       {/* ── Second pass: steps 6 and 7 ────────────────────────── */}
 
       <Part
-        transform={
-          s < 6 ? place(SPEAKER.x, SPEAKER.y, 0.6) : place(Q_HOME.x, Q_HOME.y)
-        }
+        transform={s < 6 ? place(Q_HOME.x, Q_HOME.y, 0.6) : place(Q_HOME.x, Q_HOME.y)}
         opacity={q2 ? 1 : 0}
       >
         <QuestionCard />

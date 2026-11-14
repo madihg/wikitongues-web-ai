@@ -97,7 +97,7 @@ export default function HomePage() {
         id={home.howItWorks.id}
         title={home.howItWorks.title}
         intro={method.intro}
-        width="bleed"
+        width="wide"
       >
         <MethodLoop />
       </Section>

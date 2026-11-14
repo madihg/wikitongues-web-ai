@@ -41,6 +41,7 @@ describe("the headline figure: plain model against the current language layer", 
     expect(v.plainWins).toBe("3");
     expect(v.layerDraws).toBe("5");
     expect(v.layerNeither).toBe("4");
+    expect(v.layerOther).toBe("9");
     expect(v.layerSince).toBe("October 8, 2026");
   });
 });

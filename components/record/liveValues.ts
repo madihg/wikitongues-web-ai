@@ -17,6 +17,7 @@ export function liveValues(m: PublicMethodMetrics): Record<string, string> {
     plainWins: fmtInt(layer.plainWins),
     layerDraws: fmtInt(layer.draws),
     layerNeither: fmtInt(layer.neither),
+    layerOther: fmtInt(layer.draws + layer.neither),
     layerSince: fmtDay(layer.since),
     // corpus counts
     annotators: fmtInt(m.corpus.annotators),

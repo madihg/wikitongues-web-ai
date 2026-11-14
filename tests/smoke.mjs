@@ -50,7 +50,7 @@ const homeRequired = [
   // the loop: the still and all eight steps are in the HTML as text
   "How it works",
   "The whole loop. Press play, or read the steps below.",
-  "A speaker answers a question in Igala, in their own words.",
+  "A speaker gets a question and writes their own answer in Igala.",
   "Two AI models answer the same question.",
   "The speaker picks the better answer without knowing which model wrote it.",
   "The speaker corrects the mistakes by hand and says why.",

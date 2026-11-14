@@ -60,7 +60,7 @@ export const home = {
       "We are testing it with Igala, a language spoken by about 1.6 million people in Nigeria. When we started, we asked AI models for Igala and they answered in Yoruba, a related language.",
     ],
     result: {
-      live: "Since {layerSince}, Igala speakers have compared {layerVsPlainTotal} pairs of answers without knowing which model wrote which. They preferred the answer made with their corrections {layerWins} times, and the plain model's answer {plainWins} times.",
+      live: "Since {layerSince}, Igala speakers have compared {layerVsPlainTotal} pairs of answers without knowing which model wrote which. They preferred the answer made with their corrections {layerWins} times, and the answer made without them {plainWins} times. In the other {layerOther}, they called it a draw or rejected both.",
       fallback:
         "Igala speakers compare pairs of answers without knowing which model wrote which. So far they prefer the answer made with their own corrections.",
     } as LiveText,
@@ -94,14 +94,14 @@ export const home = {
     } as LiveText,
     legend: {
       layer: "preferred the answer with the language layer",
-      plain: "preferred the plain model",
+      plain: "preferred the model on its own",
       draw: "called it a draw, or left no verdict",
       neither: "rejected both",
     },
     reading: {
-      live: "Speakers preferred the answer with the language layer {layerWins} times and the plain model's answer {plainWins} times. They called it a draw {layerDraws} times and rejected both answers {layerNeither} times.",
+      live: "Speakers preferred the answer with the language layer {layerWins} times and the answer from the model on its own {plainWins} times. They called it a draw {layerDraws} times and rejected both answers {layerNeither} times.",
       fallback:
-        "Speakers prefer the answer with the language layer far more often than the plain model's answer. The current counts are unavailable right now.",
+        "Speakers prefer the answer with the language layer far more often than the answer from the model on its own. The current counts are unavailable right now.",
     } as LiveText,
     start:
       "When the pilot started in July 2026, speakers rejected both answers in 99 of every 100 comparisons. Those comparisons were between earlier models with no language layer, so the two figures are not a before and after of one model.",

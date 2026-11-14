@@ -25,7 +25,7 @@ export interface MethodStep {
 
 export const method = {
   intro:
-    "The method is one loop. A speaker asks, two models answer, the speaker judges and corrects, and the correction is kept for the next question.",
+    "The method is one loop. A speaker writes an answer, two AI models answer the same question, the speaker judges and corrects, and the correction is kept for the next question.",
 
   stillCaption: "The whole loop. Press play, or read the steps below.",
   stillScreenReader:
@@ -71,11 +71,11 @@ export const method = {
 
   steps: [
     {
-      name: "Ask",
-      caption: "A speaker answers a question in Igala, in their own words.",
+      name: "Write",
+      caption: "A speaker gets a question and writes their own answer in Igala.",
       note: "Some questions are written by speakers. Others are built by our team from what the model got wrong last time. The questions cover eight areas, from spelling and tone marks to figures of speech and forms of respect.",
       screenReader:
-        "A question card and the speaker's own answer are on the table.",
+        "A question is on the table, and the speaker has written their own answer to it.",
     },
     {
       name: "Answer",
@@ -108,7 +108,7 @@ export const method = {
         "The language layer now holds three rows: the speaker's answer, the correction, and a grammar rule.",
     },
     {
-      name: "Ask again",
+      name: "Use",
       caption:
         "The next question goes to the model with matching pieces from the language layer.",
       note: "The model reads those pieces before it answers, and the answer comes back with fewer mistakes. The model itself is not retrained, so the same layer can work with any model.",

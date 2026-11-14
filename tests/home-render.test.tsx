@@ -107,7 +107,9 @@ describe("main page", () => {
     expect(text).toContain(
       "Since October 8, 2026, Igala speakers have compared 32 pairs of answers",
     );
-    expect(text).toContain("corrections 20 times, and the plain model's answer 3 times");
+    expect(text).toContain("corrections 20 times, and the answer made without them 3 times");
+    // 5 draws and 4 double rejections: the hero accounts for every comparison
+    expect(text).toContain("In the other 9, they called it a draw or rejected both.");
     expect(text).not.toContain(home.hero.result.fallback);
     const marks = container.querySelectorAll('[data-testid="result-row"] [data-mark]');
     expect(marks).toHaveLength(10);
