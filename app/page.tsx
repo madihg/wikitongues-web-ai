@@ -8,6 +8,7 @@ import { CTAButton } from "@/components/primitives/CTAButton";
 import { LiveFilledText } from "@/components/record/LiveFilledText";
 import { MethodLoop } from "@/components/method/MethodLoop";
 import { ResultRow } from "@/components/home/ResultRow";
+import { withBase } from "@/lib/base";
 
 // The main page is the explanation of the project, in the order a stranger
 // needs it: what it is, the problem, how it works (the loop), results, what
@@ -30,7 +31,7 @@ const prose = "max-w-measure text-body text-ink-2 md:text-igala";
 function doorHref(action: string): string {
   if (action === "email") return `mailto:${site.contactEmail}`;
   if (action === "donate") return site.donateUrl;
-  return action;
+  return withBase(action);
 }
 
 export default function HomePage() {

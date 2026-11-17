@@ -32,7 +32,8 @@ export const site = {
   // The marketing site's own canonical domain. Deliberately NOT
   // `wikitongues-ai-web.vercel.app` - that alias serves the annotation app
   // (login / annotator / learner routes). Keep these two straight.
-  url: "https://wikitongues-ai-site.vercel.app",
+  // The public address. Set NEXT_PUBLIC_SITE_URL to https://wikitongues.org/ai when the site moves there.
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://wikitongues-ai-site.vercel.app",
   parentUrl: "https://wikitongues.org",
   parentName: "Wikitongues",
   // Wikitongues' existing donation flow. Note asks donors to direct the gift to the AI initiative.

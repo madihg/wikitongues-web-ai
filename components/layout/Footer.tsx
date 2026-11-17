@@ -1,6 +1,7 @@
 import { getContent } from "@/lib/content";
 import { site } from "@/content/config";
 import { FiguresStamp } from "@/components/home/FiguresStamp";
+import { withBase } from "@/lib/base";
 
 // The one inverse surface on the site: project line, two link columns,
 // address, nonprofit status, and when the live figures were fetched.
@@ -30,7 +31,7 @@ export function Footer() {
               <ul>
                 {col.links.map((l) => (
                   <li key={l.label}>
-                    <a href={l.href} className={link}>
+                    <a href={withBase(l.href)} className={link}>
                       {l.label}
                     </a>
                   </li>

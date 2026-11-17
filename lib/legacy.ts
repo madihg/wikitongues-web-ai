@@ -1,3 +1,4 @@
+import { BASE_PATH } from "./base";
 // Old links keep working.
 //
 // Until 2026-11-13 the site had three pages: the home page, /research/ and
@@ -71,5 +72,5 @@ export function resolveLegacy(path: string, hash: string): string | null {
  * cannot disagree. */
 export function legacyScript(path: string): string {
   const rule = legacy[path];
-  return `(function(){var r=${JSON.stringify(rule)};var a=location.hash.replace(/^#/,"").replace(/-heading$/,"");var t=a&&Object.prototype.hasOwnProperty.call(r.anchors,a)?r.anchors[a]:r.fallback;if(t)location.replace(t);})();`;
+  return `(function(){var r=${JSON.stringify(rule)};var a=location.hash.replace(/^#/,"").replace(/-heading$/,"");var t=a&&Object.prototype.hasOwnProperty.call(r.anchors,a)?r.anchors[a]:r.fallback;if(t)location.replace(${JSON.stringify(BASE_PATH)}+t);})();`;
 }

@@ -1,5 +1,6 @@
 import { getContent } from "@/lib/content";
 import { site } from "@/content/config";
+import { withBase } from "@/lib/base";
 
 // Sticky header. Desktop nav inline; mobile nav uses a native <details>
 // disclosure so it works with zero client JavaScript. Every link is a 44px
@@ -16,7 +17,7 @@ export function Header() {
     >
       <div className="mx-auto flex h-full max-w-container-bleed items-center justify-between px-4 sm:px-6">
         <a
-          href="/"
+          href={withBase("/")}
           className="flex min-h-target-min items-center gap-2 font-serif text-title font-semibold"
         >
           {site.parentName}
@@ -27,7 +28,7 @@ export function Header() {
 
         <nav aria-label="Primary" className="hidden items-center gap-3 md:flex">
           {ui.nav.map((item) => (
-            <a key={item.href} href={item.href} className={link}>
+            <a key={item.href} href={withBase(item.href)} className={link}>
               {item.label}
             </a>
           ))}
@@ -64,7 +65,7 @@ export function Header() {
               {ui.nav.map((item) => (
                 <a
                   key={item.href}
-                  href={item.href}
+                  href={withBase(item.href)}
                   className="flex min-h-target items-center rounded-control px-3 text-body font-medium text-ink hover:bg-sunken"
                 >
                   {item.label}

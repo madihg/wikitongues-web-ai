@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { withBase } from "@/lib/base";
 
 type Variant = "primary" | "secondary" | "link";
 
@@ -32,7 +33,7 @@ export function CTAButton({
   const target = external ? "_blank" : undefined;
   return (
     <a
-      href={href}
+      href={withBase(href)}
       rel={rel}
       target={target}
       className={variants[variant]}
