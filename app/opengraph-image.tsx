@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 
 export const dynamic = "force-static";
 
-export const alt = "Wikitongues AI - the Igala pilot";
+export const alt = "Wikitongues AI: speakers teach AI models their own language";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,13 +16,13 @@ export default function OpengraphImage() {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        backgroundColor: "#fafaf8",
+        backgroundColor: "#fbf8f2",
         padding: "80px",
         fontFamily: "serif",
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-        <span style={{ fontSize: 34, fontWeight: 600, color: "#1a1a1a" }}>
+        <span style={{ fontSize: 34, fontWeight: 600, color: "#26211c" }}>
           Wikitongues
         </span>
         <span
@@ -30,7 +30,7 @@ export default function OpengraphImage() {
             fontSize: 24,
             fontWeight: 700,
             color: "#ffffff",
-            backgroundColor: "#0c6b6b",
+            backgroundColor: "#3814a5",
             padding: "4px 14px",
             borderRadius: "8px",
             letterSpacing: "0.08em",
@@ -44,25 +44,25 @@ export default function OpengraphImage() {
           style={{
             fontSize: 60,
             fontWeight: 600,
-            color: "#1a1a1a",
+            color: "#26211c",
             lineHeight: 1.1,
           }}
         >
-          Teaching AI to speak the world&#8217;s underserved languages.
+          Speakers teach AI models their own language.
         </div>
         <div
           style={{
             marginTop: 24,
             fontSize: 34,
-            color: "#0c6b6b",
+            color: "#3814a5",
             fontWeight: 600,
           }}
         >
-          Starting with Igala.
+          Tested with Igala.
         </div>
       </div>
-      <div style={{ fontSize: 26, color: "#595959" }}>
-        A tutor and the first public benchmark, led by the community.
+      <div style={{ fontSize: 26, color: "#544a40" }}>
+        How it works, what the speakers decided, and how to take part.
       </div>
     </div>,
     { ...size },

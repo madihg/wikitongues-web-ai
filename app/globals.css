@@ -2,46 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ------------------------------------------------------------------ */
-/* Design tokens - a restrained evolution of the wikitongues.org brand */
-/* ------------------------------------------------------------------ */
+/* Design tokens live in styles/tokens.css (imported in app/layout.tsx,
+   before this file). The rulebook is the Wikitongues AI design language, v1. */
+
+/* next/font puts the two families on <html> as --font-sans and --font-serif.
+   The token stacks read them first and fall back to fonts a phone already has. */
 :root {
-  /* Neutral base (light) */
-  --color-background: #fafaf8;
-  --color-surface: #ffffff;
-  --color-surface-sunken: #f2f2ef;
-  --color-text-primary: #1a1a1a;
-  --color-text-muted: #595959;
-  --color-border: #e2e2de;
-  --color-border-strong: #c7c7c1;
-  --color-footer-bg: #222222;
-  --color-footer-text: #f2f2ef;
-  --color-footer-muted: #b7b7b2;
-
-  /* Caution red, used sparingly (leak guard, "what it did not" labels).
-     AA verified: 5.9:1 on white. */
-  --color-danger: #b42318;
-
-  /* Accent - deep teal (AA verified: 6.30:1 on white) */
-  --color-accent: #0c6b6b;
-  --color-accent-hover: #0a5f5f;
-  --color-accent-pressed: #084f4f;
-  --color-accent-subtle: #e6f0f0;
-  --color-accent-on: #ffffff;
-
-  /* Data-viz scale (sequential, derived from teal) */
-  --viz-1: #0a4f4f;
-  --viz-2: #0f6e6e;
-  --viz-3: #3e9494;
-  --viz-4: #7cbaba;
-  --viz-5: #b9dbdb;
-
-  /* Sticky header height + anchor offset */
-  --header-h: 64px;
-
-  /* Motion */
-  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --wt-font-sans:
+    var(--font-sans), Roboto, "Noto Sans", system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  --wt-font-display:
+    var(--font-serif), "Iowan Old Style", Palatino, Georgia, serif;
 }
 
 @layer base {
@@ -50,15 +21,10 @@
   }
 
   body {
-    background-color: var(--color-background);
-    color: var(--color-text-primary);
-    font-family:
-      var(--font-sans),
-      system-ui,
-      -apple-system,
-      "Segoe UI",
-      Roboto,
-      sans-serif;
+    background-color: var(--wt-paper);
+    color: var(--wt-ink);
+    font-family: var(--wt-font-sans);
+    line-height: var(--wt-lh-body);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
@@ -66,21 +32,41 @@
   h1,
   h2,
   h3 {
-    font-family: var(--font-serif), "Iowan Old Style", Palatino, Georgia, serif;
+    font-family: var(--wt-font-display);
     letter-spacing: -0.015em;
     text-wrap: balance;
   }
 
+  /* Igala is always set in the sans, with room for a tone mark above and a
+     dot below. It is never tracked, clamped or capitalised. */
+  [lang="ig"],
+  .igala {
+    font-family: var(--wt-font-igala);
+    line-height: var(--wt-lh-igala);
+    letter-spacing: 0;
+    font-variant-ligatures: none;
+    overflow-wrap: anywhere;
+  }
+
+  pre,
+  code {
+    font-family: var(--wt-font-mono);
+  }
+
   /* Anchored sections must clear the sticky header. */
   :target {
-    scroll-margin-top: calc(var(--header-h) + 16px);
+    scroll-margin-top: calc(var(--wt-header-h) + 16px);
   }
 
   /* Visible focus for keyboard users everywhere. */
   :focus-visible {
-    outline: 2px solid var(--color-accent);
-    outline-offset: 2px;
+    outline: var(--wt-focus-width) solid var(--wt-focus);
+    outline-offset: var(--wt-focus-offset);
     border-radius: 2px;
+  }
+
+  .on-inverse :focus-visible {
+    outline-color: var(--wt-focus-on-inverse);
   }
 
   /* Sensible default link color inside prose. */
@@ -90,13 +76,28 @@
 }
 
 @layer components {
-  .overline {
-    font-size: 0.75rem;
-    line-height: 1.4;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
+  /* The loop diagram (components/method). A part moves and fades; nothing
+     else is animated, so a low-end phone can run it. Travel takes two beats
+     of the diagram duration, a fade one. */
+  .loop-part {
+    transition:
+      transform calc(var(--wt-dur-slow) * 2) var(--wt-ease),
+      opacity var(--wt-dur-slow) var(--wt-ease);
+  }
+
+  /* With reduced motion asked for, a step appears in its end state at once:
+     no travel, no fade, no stagger. */
+  .loop[data-reduced="true"] .loop-part {
+    transition: none !important;
+  }
+
+  /* Text inside the drawing. 14 units is 12.8px when the drawing is 328px
+     wide (a 360px phone), so no label falls under the 12px floor. */
+  .loop-text {
+    font-family: var(--wt-font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    fill: var(--wt-ink);
   }
 }
 
@@ -111,6 +112,7 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
     scroll-behavior: auto !important;
   }
 }

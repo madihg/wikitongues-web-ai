@@ -1,21 +1,18 @@
-import { site } from "@/content/config";
+import { home } from "@/content/en/home";
+import { CTAButton } from "@/components/primitives/CTAButton";
 
 export default function NotFound() {
+  const n = home.notFound;
   return (
-    <div className="mx-auto max-w-container px-5 py-24 text-center sm:px-6">
-      <p className="overline mb-3">404</p>
-      <h1 className="text-3xl font-semibold md:text-4xl">
-        This page does not exist
-      </h1>
-      <p className="mx-auto mt-4 max-w-measure text-muted">
-        The page you are looking for could not be found.
-      </p>
-      <a
-        href="/"
-        className="mt-8 inline-flex min-h-[44px] items-center rounded-md bg-accent px-5 py-3 font-semibold text-accent-on hover:bg-accent-hover"
-      >
-        Back to {site.name}
-      </a>
+    <div className="mx-auto max-w-container px-4 py-24 sm:px-6">
+      <h1 className="text-h2 font-semibold md:text-h1">{n.title}</h1>
+      <p className="mt-4 max-w-measure text-title text-ink-2">{n.body}</p>
+      <div className="mt-8 flex flex-wrap gap-3">
+        <CTAButton href={n.primary.href}>{n.primary.label}</CTAButton>
+        <CTAButton href={n.secondary.href} variant="secondary">
+          {n.secondary.label}
+        </CTAButton>
+      </div>
     </div>
   );
 }
